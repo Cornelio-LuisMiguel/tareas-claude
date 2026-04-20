@@ -743,16 +743,30 @@ async function fetchFromGitHub(silent = false) {
         ghSha        = data.sha;   // guardar SHA para el próximo push
         localStorage.setItem(SHA_KEY, ghSha);
 
-        const remote = JSON.parse(atob(data.content.replace(/\n/g, '')));
+        // Decodificar con TextDecoder para soportar UTF-8 / acentos correctamente
+        const bytes  = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+        const remote = JSON.parse(new TextDecoder().decode(bytes));
         const localTs  = state.lastModified  || 0;
         const remoteTs = remote.lastModified || 0;
 
-        // Usar remoto si es más reciente O si local nunca se ha sincronizado
-        if (remoteTs >= localTs && ((remote.tasks||[]).length + (remote.done||[]).length) > 0) {
+        const remoteHasTasks = ((remote.tasks||[]).length + (remote.done||[]).length) > 0;
+
+        if (remoteTs > localTs && remoteHasTasks) {
+            // Remoto es más nuevo → traer remoto
             state = remote;
             saveLocal();
             render();
-            if (!silent && remoteTs > localTs) toast('☁ Sincronizado desde GitHub');
+            if (!silent) toast('☁ Sincronizado desde GitHub');
+        } else if (localTs > remoteTs && localTs > 0) {
+            // Local es más nuevo Y fue modificado por el usuario → subir local al remoto
+            await pushToGitHub();
+            return;
+        } else if (localTs === 0 && remoteHasTasks) {
+            // Local nunca fue modificado (ts=0 = datos de ejemplo) → traer remoto siempre
+            state = remote;
+            saveLocal();
+            render();
+            if (!silent) toast('☁ Tareas cargadas desde GitHub');
         }
         setSyncStatus('synced');
     } catch(e) {
@@ -781,7 +795,11 @@ async function pushToGitHub() {
         // PASO 2 — escribir con SHA fresco
         const ts      = Date.now();
         const payload = { tasks: state.tasks, done: state.done, lastModified: ts };
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+        // Codificar con TextEncoder para soportar UTF-8 / acentos correctamente
+        const jsonStr  = JSON.stringify(payload, null, 2);
+        const encoded  = new TextEncoder().encode(jsonStr);
+        const binStr   = Array.from(encoded, b => String.fromCharCode(b)).join('');
+        const content  = btoa(binStr);
         const body    = { message: `sync: ${new Date().toISOString()}`, content };
         if (ghSha) body.sha = ghSha;
 
