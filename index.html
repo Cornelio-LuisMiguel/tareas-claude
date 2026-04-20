@@ -42,42 +42,53 @@
         .header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 18px 32px;
+            padding: 16px 28px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .logo { display: flex; align-items: center; gap: 14px; }
+        .logo { display: flex; align-items: center; gap: 12px; }
 
         .logo-icon {
-            width: 38px; height: 38px;
+            width: 36px; height: 36px;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border-radius: 10px;
+            border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
+            font-size: 17px; flex-shrink: 0;
         }
 
-        .logo-name {
-            font-size: 18px; font-weight: 700; letter-spacing: -0.4px;
-        }
+        .logo-name { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; }
         .logo-name span { color: var(--accent); }
+        .logo-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 
-        .logo-sub {
-            font-size: 11px; color: var(--text-muted); margin-top: 1px;
-            letter-spacing: 0.3px;
-        }
-
-        .header-stats { display: flex; gap: 24px; }
+        .header-stats { display: flex; gap: 20px; margin-left: auto; }
 
         .stat { text-align: center; }
-        .stat-num { font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+        .stat-num { font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
         .stat-num.active { color: var(--accent); }
         .stat-num.done   { color: var(--success); }
         .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px; }
+
+        .header-actions { display: flex; gap: 8px; }
+
+        .btn-header {
+            display: flex; align-items: center; gap: 6px;
+            padding: 7px 13px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 12px; font-weight: 600;
+            cursor: pointer; white-space: nowrap;
+            transition: all .15s; font-family: inherit;
+        }
+        .btn-header:hover { background: var(--border); color: var(--text); }
+        .btn-header.export:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+        .btn-header.import:hover { border-color: var(--success); color: var(--success); background: var(--success-bg); }
 
         /* ── Container ──────────────────────────────────────────────────── */
         .container { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
@@ -87,27 +98,37 @@
             background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
             border: 1px solid rgba(99,102,241,0.22);
             border-radius: var(--radius);
-            padding: 13px 18px;
-            margin-bottom: 22px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
             display: flex; align-items: center; gap: 12px;
         }
-        .context-bar-icon { font-size: 22px; flex-shrink: 0; }
-        .context-bar-text { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+        .context-bar-icon { font-size: 20px; flex-shrink: 0; }
+        .context-bar-text { font-size: 12px; color: var(--text-dim); line-height: 1.5; flex: 1; }
         .context-bar-text strong {
             color: var(--accent);
             font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-            font-size: 12px;
+            font-size: 11.5px;
             background: rgba(99,102,241,0.12);
             padding: 1px 6px; border-radius: 4px;
         }
+        .btn-copy-prompt {
+            padding: 6px 12px;
+            background: var(--accent-bg);
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 7px;
+            color: var(--accent); font-size: 11.5px; font-weight: 600;
+            cursor: pointer; white-space: nowrap;
+            transition: all .15s; font-family: inherit; flex-shrink: 0;
+        }
+        .btn-copy-prompt:hover { background: rgba(99,102,241,0.2); }
 
         /* ── Add-task bar ───────────────────────────────────────────────── */
         .add-bar {
             background: var(--surface);
             border: 1.5px dashed var(--border);
             border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 28px;
+            padding: 13px 18px;
+            margin-bottom: 26px;
             display: flex; align-items: center; gap: 12px;
             cursor: pointer;
             transition: border-color .2s, background .2s;
@@ -116,15 +137,15 @@
         .add-bar:hover { border-color: var(--accent); background: var(--surface2); }
 
         .add-bar-icon {
-            width: 30px; height: 30px;
+            width: 28px; height: 28px;
             background: var(--accent-bg);
             border: 1px solid rgba(99,102,241,0.25);
-            border-radius: 8px;
+            border-radius: 7px;
             display: flex; align-items: center; justify-content: center;
             color: var(--accent); font-size: 20px; font-weight: 300;
             flex-shrink: 0; line-height: 1;
         }
-        .add-bar-text { color: var(--text-muted); font-size: 14px; flex: 1; }
+        .add-bar-text { color: var(--text-muted); font-size: 13.5px; flex: 1; }
         .add-bar-shortcut {
             background: var(--surface2); border: 1px solid var(--border);
             border-radius: 5px; padding: 3px 8px;
@@ -137,7 +158,7 @@
             margin-bottom: 14px;
         }
         .section-title {
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            font-size: 11.5px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.9px; color: var(--text-muted);
         }
         .section-badge {
@@ -152,7 +173,7 @@
         }
         .section-toggle {
             margin-left: auto; background: none; border: none;
-            color: var(--text-muted); cursor: pointer; font-size: 16px;
+            color: var(--text-muted); cursor: pointer; font-size: 15px;
             padding: 4px 6px; border-radius: 5px; transition: color .15s, background .15s;
             line-height: 1;
         }
@@ -175,23 +196,20 @@
             from { opacity: 0; transform: translateY(-6px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-
-        .task-card.removing {
-            animation: slideOut .28s ease forwards;
-        }
+        .task-card.removing { animation: slideOut .25s ease forwards; }
         @keyframes slideOut {
-            to { opacity: 0; transform: translateX(16px); max-height: 0; margin: 0; border: none; }
+            to { opacity: 0; transform: translateX(14px); max-height: 0; margin: 0; border: none; }
         }
 
-        .task-card[data-prioridad="ALTA"]     { border-left-color: var(--alta); }
-        .task-card[data-prioridad="MEDIA"]    { border-left-color: var(--media); }
-        .task-card[data-prioridad="BAJA"]     { border-left-color: var(--baja); }
-        .task-card[data-prioridad="BLOQUEADO"]{ border-left-color: var(--bloqueado); }
+        .task-card[data-prioridad="ALTA"]      { border-left-color: var(--alta); }
+        .task-card[data-prioridad="MEDIA"]     { border-left-color: var(--media); }
+        .task-card[data-prioridad="BAJA"]      { border-left-color: var(--baja); }
+        .task-card[data-prioridad="BLOQUEADO"] { border-left-color: var(--bloqueado); }
 
-        .task-main { padding: 15px 18px; }
+        .task-main { padding: 14px 17px; }
 
         .task-top {
-            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;
+            display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px;
         }
 
         .badge {
@@ -199,21 +217,21 @@
             font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
             text-transform: uppercase; flex-shrink: 0; margin-top: 1px;
         }
-        .badge-alta     { background: var(--alta-bg);      color: var(--alta); }
-        .badge-media    { background: var(--media-bg);     color: var(--media); }
-        .badge-baja     { background: var(--baja-bg);      color: var(--baja); }
-        .badge-bloqueado{ background: var(--bloqueado-bg); color: var(--bloqueado); }
-        .badge-pendiente{ background: var(--surface2);     color: var(--text-muted); }
-        .badge-progreso { background: var(--accent-bg);    color: var(--accent); }
+        .badge-alta      { background: var(--alta-bg);      color: var(--alta); }
+        .badge-media     { background: var(--media-bg);     color: var(--media); }
+        .badge-baja      { background: var(--baja-bg);      color: var(--baja); }
+        .badge-bloqueado { background: var(--bloqueado-bg); color: var(--bloqueado); }
+        .badge-pendiente { background: var(--surface2);     color: var(--text-muted); }
+        .badge-progreso  { background: var(--accent-bg);    color: var(--accent); }
 
-        .task-title { font-size: 14.5px; font-weight: 600; flex: 1; line-height: 1.3; }
+        .task-title { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.3; }
 
         .task-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
 
         .btn-icon {
-            width: 28px; height: 28px; border: none; border-radius: 7px;
+            width: 27px; height: 27px; border: none; border-radius: 7px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 13px; transition: background .12s, transform .1s;
+            font-size: 12px; transition: background .12s, transform .1s;
         }
         .btn-icon:active { transform: scale(0.9); }
         .btn-complete { background: var(--success-bg); color: var(--success); }
@@ -223,7 +241,7 @@
 
         .task-project {
             font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-            font-size: 11px; color: var(--text-muted); margin-bottom: 8px;
+            font-size: 11px; color: var(--text-muted); margin-bottom: 7px;
             display: flex; align-items: center; gap: 5px;
         }
         .task-project::before {
@@ -231,9 +249,7 @@
             background: currentColor; border-radius: 50%; flex-shrink: 0;
         }
 
-        .task-description {
-            font-size: 13px; color: var(--text-dim); line-height: 1.65;
-        }
+        .task-description { font-size: 13px; color: var(--text-dim); line-height: 1.65; }
 
         /* ── Expandable details ─────────────────────────────────────────── */
         .task-details {
@@ -244,8 +260,8 @@
         .task-details.open { max-height: 800px; }
 
         .task-details-inner {
-            padding: 14px 18px;
-            display: flex; flex-direction: column; gap: 12px;
+            padding: 13px 17px;
+            display: flex; flex-direction: column; gap: 11px;
         }
 
         .detail-block label {
@@ -253,19 +269,19 @@
             text-transform: uppercase; letter-spacing: 0.7px;
             color: var(--text-muted); margin-bottom: 5px;
         }
-        .detail-block p  { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
+        .detail-block p   { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
         .detail-block pre {
             font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
             font-size: 11.5px; color: var(--text-dim);
             background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 6px; padding: 10px 12px;
+            border-radius: 6px; padding: 9px 11px;
             white-space: pre-wrap; word-break: break-all; line-height: 1.55;
         }
 
         .expand-btn {
             width: 100%; background: none; border: none;
             border-top: 1px solid var(--border);
-            padding: 8px; color: var(--text-muted); font-size: 11.5px;
+            padding: 7px; color: var(--text-muted); font-size: 11px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             gap: 5px; transition: background .12s, color .12s; font-family: inherit;
         }
@@ -275,15 +291,12 @@
         .chevron.open { transform: rotate(180deg); }
 
         /* ── Empty state ────────────────────────────────────────────────── */
-        .empty-state {
-            text-align: center; padding: 44px 20px;
-            color: var(--text-muted);
-        }
-        .empty-state-emoji { font-size: 36px; margin-bottom: 10px; opacity: .5; }
+        .empty-state { text-align: center; padding: 44px 20px; color: var(--text-muted); }
+        .empty-state-emoji { font-size: 34px; margin-bottom: 10px; opacity: .45; }
         .empty-state-text  { font-size: 13.5px; }
 
         /* ── Completed section ──────────────────────────────────────────── */
-        .completed-section { margin-top: 40px; }
+        .completed-section { margin-top: 38px; }
         .completed-section .section-header {
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border);
@@ -291,8 +304,7 @@
 
         .completed-list {
             display: flex; flex-direction: column; gap: 6px;
-            overflow: hidden;
-            max-height: 9999px;
+            overflow: hidden; max-height: 9999px;
             transition: max-height .4s ease;
         }
         .completed-list.collapsed { max-height: 0; }
@@ -302,14 +314,14 @@
             border: 1px solid var(--border);
             border-left: 3px solid var(--success);
             border-radius: var(--radius);
-            padding: 11px 15px;
-            display: flex; align-items: center; gap: 11px;
+            padding: 10px 15px;
+            display: flex; align-items: center; gap: 10px;
             animation: slideIn .18s ease;
             transition: opacity .2s, transform .2s;
         }
 
         .check-circle {
-            width: 22px; height: 22px; flex-shrink: 0;
+            width: 21px; height: 21px; flex-shrink: 0;
             background: var(--success-bg);
             border: 1.5px solid rgba(34,197,94,0.35);
             border-radius: 50%;
@@ -321,15 +333,113 @@
             flex: 1; font-size: 13px;
             color: var(--text-muted);
             text-decoration: line-through;
-            text-decoration-color: rgba(100,116,139,0.5);
+            text-decoration-color: rgba(100,116,139,0.45);
         }
 
         .completed-date {
             font-size: 10.5px; color: var(--text-muted);
-            opacity: .55; white-space: nowrap; flex-shrink: 0;
+            opacity: .5; white-space: nowrap; flex-shrink: 0;
         }
 
-        /* ── Modal ──────────────────────────────────────────────────────── */
+        /* ── Toast ──────────────────────────────────────────────────────── */
+        .toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13px; color: var(--text);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            z-index: 9999;
+            opacity: 0; pointer-events: none;
+            transition: opacity .2s, transform .2s;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1; transform: translateX(-50%) translateY(0);
+        }
+        .toast.success { border-color: rgba(34,197,94,0.35); }
+        .toast.error   { border-color: rgba(239,68,68,0.35); }
+
+        /* ── Import modal ───────────────────────────────────────────────── */
+        .import-modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.72);
+            z-index: 998;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none;
+            transition: opacity .18s;
+            backdrop-filter: blur(6px);
+        }
+        .import-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        .import-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            transform: translateY(16px) scale(0.97);
+            transition: transform .22s cubic-bezier(0.34,1.46,0.64,1);
+            overflow: hidden;
+        }
+        .import-modal-overlay.open .import-modal { transform: translateY(0) scale(1); }
+
+        .import-modal-head {
+            padding: 18px 22px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .import-modal-icon {
+            width: 36px; height: 36px; border-radius: 9px;
+            background: var(--success-bg);
+            border: 1px solid rgba(34,197,94,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px; flex-shrink: 0;
+        }
+        .import-modal-title { font-size: 15px; font-weight: 700; }
+        .import-modal-sub   { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
+
+        .import-modal-body { padding: 18px 22px; }
+        .import-info {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;
+            font-size: 12.5px; color: var(--text-dim); line-height: 1.6;
+        }
+        .import-info strong { color: var(--text); }
+
+        .import-modal-foot {
+            padding: 14px 22px;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 8px;
+        }
+        .btn-import-replace {
+            flex: 1; padding: 9px 14px; border-radius: 8px; border: none;
+            background: var(--alta-bg); color: var(--alta);
+            font-size: 12.5px; font-weight: 700; cursor: pointer;
+            transition: background .13s; font-family: inherit;
+        }
+        .btn-import-replace:hover { background: rgba(239,68,68,0.2); }
+
+        .btn-import-merge {
+            flex: 1; padding: 9px 14px; border-radius: 8px; border: none;
+            background: var(--success-bg); color: var(--success);
+            font-size: 12.5px; font-weight: 700; cursor: pointer;
+            transition: background .13s; font-family: inherit;
+        }
+        .btn-import-merge:hover { background: rgba(34,197,94,0.2); }
+
+        .btn-import-cancel {
+            padding: 9px 14px; border-radius: 8px;
+            background: var(--surface2); color: var(--text-muted);
+            border: 1px solid var(--border);
+            font-size: 12.5px; font-weight: 600; cursor: pointer;
+            transition: background .13s; font-family: inherit;
+        }
+        .btn-import-cancel:hover { background: var(--border); color: var(--text); }
+
+        /* ── New task modal ─────────────────────────────────────────────── */
         .overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.72);
@@ -355,7 +465,7 @@
         .overlay.open .modal { transform: translateY(0) scale(1); }
 
         .modal-head {
-            padding: 20px 22px 16px;
+            padding: 18px 22px 15px;
             display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--border);
         }
@@ -399,7 +509,6 @@
         textarea { resize: vertical; min-height: 70px; }
         select option { background: #1a1a28; }
 
-        /* Priority picker */
         .priority-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
         .pri-opt {
             border: 1.5px solid var(--border);
@@ -444,6 +553,7 @@
             <div class="logo-sub">HyperTrader — Continuidad entre sesiones</div>
         </div>
     </div>
+
     <div class="header-stats">
         <div class="stat">
             <div class="stat-num active" id="cnt-active">0</div>
@@ -454,6 +564,16 @@
             <div class="stat-label">Completadas</div>
         </div>
     </div>
+
+    <div class="header-actions">
+        <button class="btn-header export" onclick="exportarTareas()" title="Descargar tareas como JSON">
+            ↑ Exportar
+        </button>
+        <button class="btn-header import" onclick="document.getElementById('file-import').click()" title="Cargar tareas desde JSON">
+            ↓ Importar
+        </button>
+        <input type="file" id="file-import" accept=".json" style="display:none" onchange="importarTareas(event)">
+    </div>
 </div>
 
 <!-- ── MAIN ────────────────────────────────────────────────────────────────── -->
@@ -463,9 +583,10 @@
     <div class="context-bar">
         <div class="context-bar-icon">💬</div>
         <div class="context-bar-text">
-            Para retomar con Claude: abre el proyecto y escribe<br>
+            Para retomar con Claude abre el proyecto y escribe:<br>
             <strong>"Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos"</strong>
         </div>
+        <button class="btn-copy-prompt" onclick="copiarPrompt()">Copiar</button>
     </div>
 
     <!-- Add task bar -->
@@ -487,14 +608,41 @@
         <div class="section-header">
             <span class="section-title" style="color:var(--success)">Completadas</span>
             <span class="section-badge done-badge" id="done-badge">0</span>
-            <button class="section-toggle" id="toggle-btn" onclick="toggleCompleted()" title="Mostrar/ocultar">▾</button>
+            <button class="section-toggle" id="toggle-btn" onclick="toggleCompleted()">▾</button>
         </div>
         <div class="completed-list" id="done-list"></div>
     </div>
 
 </div>
 
-<!-- ── MODAL ───────────────────────────────────────────────────────────────── -->
+<!-- ── TOAST ───────────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── IMPORT CONFIRM MODAL ────────────────────────────────────────────────── -->
+<div class="import-modal-overlay" id="import-overlay" onclick="handleImportOverlay(event)">
+    <div class="import-modal">
+        <div class="import-modal-head">
+            <div class="import-modal-icon">📥</div>
+            <div>
+                <div class="import-modal-title">Importar tareas</div>
+                <div class="import-modal-sub" id="import-summary">—</div>
+            </div>
+        </div>
+        <div class="import-modal-body">
+            <div class="import-info">
+                <strong>Reemplazar:</strong> borra todo lo actual e importa solo el archivo.<br><br>
+                <strong>Combinar:</strong> agrega las tareas nuevas sin borrar las existentes (evita duplicados por ID).
+            </div>
+        </div>
+        <div class="import-modal-foot">
+            <button class="btn-import-cancel" onclick="cancelImport()">Cancelar</button>
+            <button class="btn-import-replace" onclick="confirmarImport('replace')">Reemplazar</button>
+            <button class="btn-import-merge"   onclick="confirmarImport('merge')">Combinar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── NEW TASK MODAL ──────────────────────────────────────────────────────── -->
 <div class="overlay" id="overlay" onclick="handleOverlay(event)">
     <div class="modal">
         <div class="modal-head">
@@ -557,64 +705,54 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
-// DATA — datos iniciales pre-cargados desde TAREAS_CLAUDE.md
+// SEED DATA
 // ══════════════════════════════════════════════════════════════════════════════
 
 const SEED_TASKS = [
     {
-        id: 'seed-1',
-        titulo: 'Migración completa a Bybit',
+        id: 'seed-1', titulo: 'Migración completa a Bybit',
         prioridad: 'ALTA',
         proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/bybit-trader/',
         queHacer: 'Ejecutar la migración del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API (auth HMAC diferente, Buy/Sell en lugar de 1/2/3/4)\n2. Adaptar src/multi_bot.py — WS_FUTURES, obtener_balance_futures(), obtener_top_pares(), _conectar_ws(), _on_message()\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulación',
         contexto: 'El proyecto HyperTrader 2 corre en MEXC. Se quiere migrar a Bybit manteniendo toda la lógica de pro_v2/, riesgo.py, indicadores.py, etc. Solo cambian las capas de comunicación. El plan fue aprobado y detallado, solo falta ejecutarlo.',
         archivos: 'src/ordenes.py — reescritura completa para Bybit v5\nsrc/multi_bot.py — 5 cambios quirúrgicos\nconfig/config.yaml — reemplazar sección mexc: por bybit:',
-        estado: 'Pendiente',
-        fecha: '2026-04-19',
+        estado: 'Pendiente', fecha: '2026-04-19',
     },
     {
-        id: 'seed-2',
-        titulo: 'Posiciones huérfanas al reiniciar el bot',
+        id: 'seed-2', titulo: 'Posiciones huérfanas al reiniciar el bot',
         prioridad: 'ALTA',
         proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
         queHacer: 'Implementar reconciliación de posiciones al arrancar y detección de cierres externos cada 15 min.\n\n→ src/ordenes.py: añadir get_posiciones_abiertas()\n→ src/multi_bot.py: añadir _reconciliar_posiciones_arranque() y detección en _iniciar_sync_balance()',
         contexto: 'Si el bot se reinicia con posiciones abiertas en MEXC, las pierde de memoria y no puede gestionar SL/TP. GestorRiesgo.__init__() siempre arranca con posiciones=[]. El endpoint existe en el exchange pero no está conectado al bot.',
         archivos: 'src/ordenes.py\nsrc/multi_bot.py\nsrc/riesgo.py — ya tiene tiene_posicion() y _cerrar_posicion_externa()',
-        estado: 'Pendiente',
-        fecha: '2026-04-19',
+        estado: 'Pendiente', fecha: '2026-04-19',
     },
     {
-        id: 'seed-3',
-        titulo: 'Mejorar estrategia: demasiados loss / breakeven',
+        id: 'seed-3', titulo: 'Mejorar estrategia: demasiados loss / breakeven',
         prioridad: 'MEDIA',
         proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
         queHacer: 'Ajustar dos parámetros en config/config.yaml:\n\n  senales:\n    score_minimo: 80   # era 99\n  indicadores:\n    volumen_multiplicador: 2   # era 12',
-        contexto: 'score_minimo=99 es tan restrictivo que casi ninguna señal pasa el filtro. volumen_multiplicador=12 exige volumen 12x el promedio — rara vez se cumple. Resultado: el bot opera muy poco y cuando lo hace, las entradas son subóptimas.',
+        contexto: 'score_minimo=99 filtra casi todas las señales buenas. volumen_multiplicador=12 exige volumen 12x el promedio — rara vez se cumple.',
         archivos: 'config/config.yaml',
-        estado: 'Pendiente',
-        fecha: '2026-04-19',
+        estado: 'Pendiente', fecha: '2026-04-19',
     },
     {
-        id: 'seed-4',
-        titulo: 'Fix Hermes CLI con Google Gemini',
+        id: 'seed-4', titulo: 'Fix Hermes CLI con Google Gemini',
         prioridad: 'MEDIA',
         proyecto: '/Users/lamaquinadeldinero/.hermes/',
-        queHacer: 'Resolver por qué hermes no carga la API key de Gemini desde .env.\n\nOpciones:\n1. Verificar si hermes carga .env automáticamente (puede que no use python-dotenv)\n2. Probar: export GOOGLE_API_KEY=AIzaSy... antes de correr hermes\n3. O pasar la key como argumento CLI si hermes lo soporta',
-        contexto: 'Se configuró gemini-2.5-flash como modelo para Hermes. La key está en .env y en hermes config set, pero os.getenv("GOOGLE_API_KEY") devuelve vacío en el proceso de hermes. Las llamadas fallan con API_KEY_INVALID. Verificado que la key es válida vía curl directo.',
-        archivos: '/Users/lamaquinadeldinero/.hermes/.env — key en línea ~404\n/Users/lamaquinadeldinero/.hermes/config.yaml — model.provider: gemini\nrun_agent.py línea 1065 — header x-goog-api-key',
-        estado: 'Bloqueado',
-        fecha: '2026-04-19',
+        queHacer: 'Resolver por qué hermes no carga la API key de Gemini desde .env.\n\n1. Verificar si hermes carga .env automáticamente\n2. Probar: export GOOGLE_API_KEY=AIzaSy... antes de correr hermes\n3. O pasar la key como argumento CLI',
+        contexto: 'Se configuró gemini-2.5-flash. La key está en .env pero os.getenv("GOOGLE_API_KEY") devuelve vacío. Las llamadas fallan con API_KEY_INVALID. Key verificada válida vía curl.',
+        archivos: '/Users/lamaquinadeldinero/.hermes/.env — key en línea ~404\n/Users/lamaquinadeldinero/.hermes/config.yaml\nrun_agent.py línea 1065',
+        estado: 'Bloqueado', fecha: '2026-04-19',
     },
     {
-        id: 'seed-5',
-        titulo: 'Escalar a 40 posiciones simultáneas',
+        id: 'seed-5', titulo: 'Escalar a 40 posiciones simultáneas',
         prioridad: 'BAJA',
         proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
-        queHacer: 'Solo cambiar dos valores en config/config.yaml (no hay cambios de código):\n\n  riesgo:\n    max_posiciones_global: 40   # era 6\n    max_operaciones_abiertas: 40  # era 6\n    max_por_operacion: 0.010\n    circuit_breaker_pct: 0.10',
-        contexto: 'Actualmente el límite es 6 posiciones. Con más capital ($200+) se pueden gestionar hasta 40 simultáneas. Aplicar solo cuando el capital lo justifique.',
+        queHacer: 'Solo cambiar en config/config.yaml (sin cambios de código):\n\n  riesgo:\n    max_posiciones_global: 40\n    max_operaciones_abiertas: 40\n    max_por_operacion: 0.010\n    circuit_breaker_pct: 0.10',
+        contexto: 'Actualmente el límite es 6 posiciones. Aplicar solo cuando el capital supere $200 USDT.',
         archivos: 'config/config.yaml',
-        estado: 'Pendiente',
-        fecha: '2026-04-19',
+        estado: 'Pendiente', fecha: '2026-04-19',
     },
 ];
 
@@ -623,7 +761,7 @@ const SEED_DONE = [
     { id: 'done-2',  titulo: 'Dashboard filtra trades reales — últimos 30 días',              fecha: '2026-04-19' },
     { id: 'done-3',  titulo: 'PnL del dashboard muestra solo trades cerrados HOY',            fecha: '2026-04-19' },
     { id: 'done-4',  titulo: 'Limpieza de 60 archivos muertos (56,320 líneas eliminadas)',    fecha: '2026-04-19' },
-    { id: 'done-5',  titulo: 'Leverage correcto en PnL — actualizar_pnl multiplica leverage', fecha: '2026-04-18' },
+    { id: 'done-5',  titulo: 'Leverage correcto en PnL — actualizar_pnl × leverage',          fecha: '2026-04-18' },
     { id: 'done-6',  titulo: 'GestorRiesgo recibe parámetro leverage',                        fecha: '2026-04-18' },
     { id: 'done-7',  titulo: 'tiene_posicion() y tiene_posicion_opuesta() en riesgo.py',      fecha: '2026-04-18' },
     { id: 'done-8',  titulo: '_cerrar_posicion_externa() en riesgo.py',                       fecha: '2026-04-18' },
@@ -632,26 +770,21 @@ const SEED_DONE = [
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
-// STATE
+// STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════════════════════════════
 
 const STORAGE_KEY = 'claude-tasks-v3';
 
 function load() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
-    } catch(e) {}
+    try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch(e) {}
     return { tasks: SEED_TASKS, done: SEED_DONE };
 }
-
-function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
 let state = load();
 let completedOpen = true;
 let curPri = 'ALTA';
+let pendingImport = null;   // holds parsed JSON while user decides replace vs merge
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HELPERS
@@ -661,18 +794,29 @@ function esc(s) {
     if (!s) return '';
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 function uid() { return 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2,7); }
 
 function priBadge(p) {
-    const map = { ALTA:'badge-alta', MEDIA:'badge-media', BAJA:'badge-baja', BLOQUEADO:'badge-bloqueado' };
-    return `<span class="badge ${map[p]||'badge-pendiente'}">${p}</span>`;
+    const m = { ALTA:'badge-alta', MEDIA:'badge-media', BAJA:'badge-baja', BLOQUEADO:'badge-bloqueado' };
+    return `<span class="badge ${m[p]||'badge-pendiente'}">${p}</span>`;
 }
-
 function estadoBadge(e) {
     if (e === 'En progreso') return `<span class="badge badge-progreso" style="font-size:10px">En progreso</span>`;
     if (e === 'Bloqueado')   return `<span class="badge badge-bloqueado" style="font-size:10px">Bloqueado</span>`;
     return '';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════════════
+
+let toastTimer = null;
+function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -730,7 +874,7 @@ function render() {
         ? state.tasks.map(renderTask).join('')
         : `<div class="empty-state">
                <div class="empty-state-emoji">🎯</div>
-               <div class="empty-state-text">No hay tareas activas. ¡Todo bajo control!</div>
+               <div class="empty-state-text">No hay tareas activas — ¡todo bajo control!</div>
            </div>`;
 
     dl.innerHTML = state.done.length
@@ -740,10 +884,10 @@ function render() {
            </div>`;
 
     const a = state.tasks.length, d = state.done.length;
-    document.getElementById('cnt-active').textContent    = a;
-    document.getElementById('cnt-done').textContent      = d;
-    document.getElementById('active-badge').textContent  = a;
-    document.getElementById('done-badge').textContent    = d;
+    document.getElementById('cnt-active').textContent   = a;
+    document.getElementById('cnt-done').textContent     = d;
+    document.getElementById('active-badge').textContent = a;
+    document.getElementById('done-badge').textContent   = d;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -760,7 +904,8 @@ function completeTask(id) {
         state.tasks.splice(idx, 1);
         state.done.unshift({ id: uid(), titulo: t.titulo, fecha: new Date().toISOString().slice(0,10) });
         save(); render();
-    }, 280);
+        toast('✓ Tarea completada');
+    }, 250);
 }
 
 function deleteTask(id) {
@@ -769,16 +914,17 @@ function deleteTask(id) {
     setTimeout(() => {
         state.tasks = state.tasks.filter(t => t.id !== id);
         save(); render();
-    }, 280);
+        toast('Tarea eliminada', 'error');
+    }, 250);
 }
 
 function deleteDone(id) {
     const card = document.querySelector(`.completed-card[data-id="${id}"]`);
-    if (card) { card.style.opacity='0'; card.style.transform='translateX(14px)'; card.style.transition='all .22s ease'; }
+    if (card) { card.style.opacity='0'; card.style.transform='translateX(12px)'; card.style.transition='all .2s'; }
     setTimeout(() => {
         state.done = state.done.filter(d => d.id !== id);
         save(); render();
-    }, 220);
+    }, 200);
 }
 
 function toggleDet(id, btn) {
@@ -797,7 +943,88 @@ function toggleCompleted() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// MODAL
+// EXPORT / IMPORT
+// ══════════════════════════════════════════════════════════════════════════════
+
+function exportarTareas() {
+    const payload = {
+        version: 1,
+        app: 'Tareas Claude — HyperTrader',
+        exportado: new Date().toISOString(),
+        tasks: state.tasks,
+        done:  state.done,
+    };
+    const json = JSON.stringify(payload, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `tareas-claude-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast(`↑ Exportadas ${state.tasks.length} tareas activas y ${state.done.length} completadas`);
+}
+
+function importarTareas(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!Array.isArray(data.tasks) || !Array.isArray(data.done))
+                throw new Error('El archivo no tiene el formato correcto.');
+            pendingImport = data;
+            document.getElementById('import-summary').textContent =
+                `${data.tasks.length} activas · ${data.done.length} completadas · exportado ${(data.exportado||'').slice(0,10)}`;
+            document.getElementById('import-overlay').classList.add('open');
+        } catch(err) {
+            toast('Error al leer el archivo: ' + err.message, 'error');
+        }
+        e.target.value = '';
+    };
+    reader.readAsText(file);
+}
+
+function confirmarImport(mode) {
+    if (!pendingImport) return;
+    if (mode === 'replace') {
+        state.tasks = pendingImport.tasks;
+        state.done  = pendingImport.done;
+        toast(`↓ Reemplazado — ${state.tasks.length} tareas importadas`);
+    } else {
+        const existT = new Set(state.tasks.map(t => t.id));
+        const existD = new Set(state.done.map(d => d.id));
+        let added = 0;
+        pendingImport.tasks.forEach(t => { if (!existT.has(t.id)) { state.tasks.push(t); added++; } });
+        pendingImport.done.forEach(d  => { if (!existD.has(d.id)) { state.done.push(d); } });
+        toast(`↓ Combinado — ${added} tarea${added !== 1 ? 's' : ''} nueva${added !== 1 ? 's' : ''} agregada${added !== 1 ? 's' : ''}`);
+    }
+    pendingImport = null;
+    save(); render();
+    document.getElementById('import-overlay').classList.remove('open');
+}
+
+function cancelImport() {
+    pendingImport = null;
+    document.getElementById('import-overlay').classList.remove('open');
+}
+
+function handleImportOverlay(e) {
+    if (e.target === document.getElementById('import-overlay')) cancelImport();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// COPY PROMPT
+// ══════════════════════════════════════════════════════════════════════════════
+
+function copiarPrompt() {
+    const texto = 'Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos';
+    navigator.clipboard.writeText(texto).then(() => toast('📋 Prompt copiado al portapapeles'));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NEW TASK MODAL
 // ══════════════════════════════════════════════════════════════════════════════
 
 function openModal() {
@@ -832,7 +1059,6 @@ function resetForm() {
 function addTask() {
     const titulo   = document.getElementById('f-titulo').value.trim();
     const queHacer = document.getElementById('f-quehace').value.trim();
-
     if (!titulo) {
         const el = document.getElementById('f-titulo');
         el.style.borderColor = 'var(--alta)';
@@ -840,8 +1066,7 @@ function addTask() {
         setTimeout(() => el.style.borderColor = '', 1800);
         return;
     }
-
-    const task = {
+    state.tasks.unshift({
         id:        uid(),
         titulo,
         prioridad: curPri,
@@ -851,24 +1076,22 @@ function addTask() {
         archivos:  document.getElementById('f-archivos').value.trim(),
         estado:    document.getElementById('f-estado').value,
         fecha:     new Date().toISOString().slice(0,10),
-    };
-
-    state.tasks.unshift(task);
-    save();
-    closeModal();
-    render();
-    setTimeout(() => document.getElementById('active-list').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    });
+    save(); closeModal(); render();
+    toast('✓ Tarea agregada');
+    setTimeout(() => document.getElementById('active-list').scrollIntoView({ behavior:'smooth', block:'start' }), 80);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// KEYBOARD
+// KEYBOARD SHORTCUTS
 // ══════════════════════════════════════════════════════════════════════════════
 
 document.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); openModal(); return; }
-    if (e.key === 'Escape') closeModal();
-    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT' &&
-        document.getElementById('overlay').classList.contains('open')) { addTask(); }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'e') { e.preventDefault(); exportarTareas(); return; }
+    if (e.key === 'Escape') { closeModal(); cancelImport(); }
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT'
+        && document.getElementById('overlay').classList.contains('open')) { addTask(); }
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
