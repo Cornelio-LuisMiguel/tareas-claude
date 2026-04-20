@@ -729,7 +729,6 @@ async function fetchFromGitHub(silent = false) {
             headers: {
                 'Authorization': `Bearer ${ghToken}`,
                 'Accept':        'application/vnd.github.v3+json',
-                'Cache-Control': 'no-cache',
             }
         });
         if (r.status === 404) {
@@ -771,7 +770,6 @@ async function pushToGitHub() {
             headers: {
                 'Authorization': `Bearer ${ghToken}`,
                 'Accept':        'application/vnd.github.v3+json',
-                'Cache-Control': 'no-cache',
             }
         });
         if (getR.ok) {
