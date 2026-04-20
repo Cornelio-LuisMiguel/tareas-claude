@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas Claude — HyperTrader</title>
+    <style>
+        :root {
+            --bg:           #0d0d14;
+            --surface:      #13131e;
+            --surface2:     #1a1a28;
+            --border:       #252535;
+            --text:         #e2e8f0;
+            --text-muted:   #64748b;
+            --text-dim:     #94a3b8;
+            --alta:         #ef4444;
+            --alta-bg:      rgba(239,68,68,0.10);
+            --media:        #f59e0b;
+            --media-bg:     rgba(245,158,11,0.10);
+            --baja:         #3b82f6;
+            --baja-bg:      rgba(59,130,246,0.10);
+            --bloqueado:    #8b5cf6;
+            --bloqueado-bg: rgba(139,92,246,0.10);
+            --success:      #22c55e;
+            --success-bg:   rgba(34,197,94,0.10);
+            --accent:       #6366f1;
+            --accent-bg:    rgba(99,102,241,0.10);
+            --radius:       10px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ── Header ─────────────────────────────────────────────────────── */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { display: flex; align-items: center; gap: 14px; }
+
+        .logo-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo-name {
+            font-size: 18px; font-weight: 700; letter-spacing: -0.4px;
+        }
+        .logo-name span { color: var(--accent); }
+
+        .logo-sub {
+            font-size: 11px; color: var(--text-muted); margin-top: 1px;
+            letter-spacing: 0.3px;
+        }
+
+        .header-stats { display: flex; gap: 24px; }
+
+        .stat { text-align: center; }
+        .stat-num { font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+        .stat-num.active { color: var(--accent); }
+        .stat-num.done   { color: var(--success); }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px; }
+
+        /* ── Container ──────────────────────────────────────────────────── */
+        .container { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
+
+        /* ── Claude context bar ─────────────────────────────────────────── */
+        .context-bar {
+            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
+            border: 1px solid rgba(99,102,241,0.22);
+            border-radius: var(--radius);
+            padding: 13px 18px;
+            margin-bottom: 22px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .context-bar-icon { font-size: 22px; flex-shrink: 0; }
+        .context-bar-text { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+        .context-bar-text strong {
+            color: var(--accent);
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-size: 12px;
+            background: rgba(99,102,241,0.12);
+            padding: 1px 6px; border-radius: 4px;
+        }
+
+        /* ── Add-task bar ───────────────────────────────────────────────── */
+        .add-bar {
+            background: var(--surface);
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            user-select: none;
+        }
+        .add-bar:hover { border-color: var(--accent); background: var(--surface2); }
+
+        .add-bar-icon {
+            width: 30px; height: 30px;
+            background: var(--accent-bg);
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 20px; font-weight: 300;
+            flex-shrink: 0; line-height: 1;
+        }
+        .add-bar-text { color: var(--text-muted); font-size: 14px; flex: 1; }
+        .add-bar-shortcut {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 5px; padding: 3px 8px;
+            font-size: 11px; color: var(--text-muted); font-family: monospace;
+        }
+
+        /* ── Section header ─────────────────────────────────────────────── */
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px;
+        }
+        .section-title {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.9px; color: var(--text-muted);
+        }
+        .section-badge {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 20px; padding: 2px 9px;
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
+        }
+        .section-badge.done-badge {
+            background: var(--success-bg);
+            border-color: rgba(34,197,94,0.2);
+            color: var(--success);
+        }
+        .section-toggle {
+            margin-left: auto; background: none; border: none;
+            color: var(--text-muted); cursor: pointer; font-size: 16px;
+            padding: 4px 6px; border-radius: 5px; transition: color .15s, background .15s;
+            line-height: 1;
+        }
+        .section-toggle:hover { background: var(--surface2); color: var(--text); }
+
+        /* ── Tasks list ─────────────────────────────────────────────────── */
+        .tasks-list { display: flex; flex-direction: column; gap: 10px; }
+
+        /* ── Task card ──────────────────────────────────────────────────── */
+        .task-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid transparent;
+            border-radius: var(--radius);
+            overflow: hidden;
+            animation: slideIn .22s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-card.removing {
+            animation: slideOut .28s ease forwards;
+        }
+        @keyframes slideOut {
+            to { opacity: 0; transform: translateX(16px); max-height: 0; margin: 0; border: none; }
+        }
+
+        .task-card[data-prioridad="ALTA"]     { border-left-color: var(--alta); }
+        .task-card[data-prioridad="MEDIA"]    { border-left-color: var(--media); }
+        .task-card[data-prioridad="BAJA"]     { border-left-color: var(--baja); }
+        .task-card[data-prioridad="BLOQUEADO"]{ border-left-color: var(--bloqueado); }
+
+        .task-main { padding: 15px 18px; }
+
+        .task-top {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;
+        }
+
+        .badge {
+            padding: 3px 8px; border-radius: 5px;
+            font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+            text-transform: uppercase; flex-shrink: 0; margin-top: 1px;
+        }
+        .badge-alta     { background: var(--alta-bg);      color: var(--alta); }
+        .badge-media    { background: var(--media-bg);     color: var(--media); }
+        .badge-baja     { background: var(--baja-bg);      color: var(--baja); }
+        .badge-bloqueado{ background: var(--bloqueado-bg); color: var(--bloqueado); }
+        .badge-pendiente{ background: var(--surface2);     color: var(--text-muted); }
+        .badge-progreso { background: var(--accent-bg);    color: var(--accent); }
+
+        .task-title { font-size: 14.5px; font-weight: 600; flex: 1; line-height: 1.3; }
+
+        .task-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+
+        .btn-icon {
+            width: 28px; height: 28px; border: none; border-radius: 7px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; transition: background .12s, transform .1s;
+        }
+        .btn-icon:active { transform: scale(0.9); }
+        .btn-complete { background: var(--success-bg); color: var(--success); }
+        .btn-complete:hover { background: rgba(34,197,94,0.2); }
+        .btn-delete   { background: var(--alta-bg); color: var(--alta); }
+        .btn-delete:hover { background: rgba(239,68,68,0.2); }
+
+        .task-project {
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-size: 11px; color: var(--text-muted); margin-bottom: 8px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .task-project::before {
+            content: ''; width: 3px; height: 3px;
+            background: currentColor; border-radius: 50%; flex-shrink: 0;
+        }
+
+        .task-description {
+            font-size: 13px; color: var(--text-dim); line-height: 1.65;
+        }
+
+        /* ── Expandable details ─────────────────────────────────────────── */
+        .task-details {
+            border-top: 1px solid var(--border);
+            max-height: 0; overflow: hidden;
+            transition: max-height .32s cubic-bezier(0.4,0,0.2,1);
+        }
+        .task-details.open { max-height: 800px; }
+
+        .task-details-inner {
+            padding: 14px 18px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .detail-block label {
+            display: block; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.7px;
+            color: var(--text-muted); margin-bottom: 5px;
+        }
+        .detail-block p  { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
+        .detail-block pre {
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-size: 11.5px; color: var(--text-dim);
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 6px; padding: 10px 12px;
+            white-space: pre-wrap; word-break: break-all; line-height: 1.55;
+        }
+
+        .expand-btn {
+            width: 100%; background: none; border: none;
+            border-top: 1px solid var(--border);
+            padding: 8px; color: var(--text-muted); font-size: 11.5px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 5px; transition: background .12s, color .12s; font-family: inherit;
+        }
+        .expand-btn:hover { background: var(--surface2); color: var(--text); }
+
+        .chevron { display: inline-block; transition: transform .22s; font-size: 9px; }
+        .chevron.open { transform: rotate(180deg); }
+
+        /* ── Empty state ────────────────────────────────────────────────── */
+        .empty-state {
+            text-align: center; padding: 44px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state-emoji { font-size: 36px; margin-bottom: 10px; opacity: .5; }
+        .empty-state-text  { font-size: 13.5px; }
+
+        /* ── Completed section ──────────────────────────────────────────── */
+        .completed-section { margin-top: 40px; }
+        .completed-section .section-header {
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .completed-list {
+            display: flex; flex-direction: column; gap: 6px;
+            overflow: hidden;
+            max-height: 9999px;
+            transition: max-height .4s ease;
+        }
+        .completed-list.collapsed { max-height: 0; }
+
+        .completed-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--success);
+            border-radius: var(--radius);
+            padding: 11px 15px;
+            display: flex; align-items: center; gap: 11px;
+            animation: slideIn .18s ease;
+            transition: opacity .2s, transform .2s;
+        }
+
+        .check-circle {
+            width: 22px; height: 22px; flex-shrink: 0;
+            background: var(--success-bg);
+            border: 1.5px solid rgba(34,197,94,0.35);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--success); font-size: 11px; font-weight: 700;
+        }
+
+        .completed-title {
+            flex: 1; font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            text-decoration-color: rgba(100,116,139,0.5);
+        }
+
+        .completed-date {
+            font-size: 10.5px; color: var(--text-muted);
+            opacity: .55; white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* ── Modal ──────────────────────────────────────────────────────── */
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.72);
+            z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none;
+            transition: opacity .18s;
+            backdrop-filter: blur(6px);
+        }
+        .overlay.open { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            width: 100%; max-width: 540px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            transform: translateY(20px) scale(0.96);
+            transition: transform .25s cubic-bezier(0.34,1.46,0.64,1);
+            max-height: 90vh; overflow-y: auto;
+        }
+        .overlay.open .modal { transform: translateY(0) scale(1); }
+
+        .modal-head {
+            padding: 20px 22px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-title { font-size: 15px; font-weight: 700; }
+
+        .modal-close-btn {
+            width: 26px; height: 26px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 6px; cursor: pointer; color: var(--text-muted);
+            font-size: 14px; display: flex; align-items: center; justify-content: center;
+            transition: background .12s, color .12s;
+        }
+        .modal-close-btn:hover { background: var(--border); color: var(--text); }
+
+        .modal-body {
+            padding: 18px 22px;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .form-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.55px; color: var(--text-muted);
+        }
+        .form-label .req { color: var(--alta); }
+
+        input[type="text"], textarea, select {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px; padding: 9px 11px;
+            color: var(--text); font-size: 13.5px; font-family: inherit;
+            transition: border-color .15s, box-shadow .15s;
+            width: 100%;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.14);
+        }
+        textarea { resize: vertical; min-height: 70px; }
+        select option { background: #1a1a28; }
+
+        /* Priority picker */
+        .priority-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+        .pri-opt {
+            border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 8px 6px;
+            text-align: center; cursor: pointer;
+            font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.3px; transition: all .14s;
+            color: var(--text-muted); user-select: none;
+        }
+        .pri-opt[data-v="ALTA"]:hover,  .pri-opt[data-v="ALTA"].sel  { border-color: var(--alta);  background: var(--alta-bg);  color: var(--alta);  }
+        .pri-opt[data-v="MEDIA"]:hover, .pri-opt[data-v="MEDIA"].sel { border-color: var(--media); background: var(--media-bg); color: var(--media); }
+        .pri-opt[data-v="BAJA"]:hover,  .pri-opt[data-v="BAJA"].sel  { border-color: var(--baja);  background: var(--baja-bg);  color: var(--baja);  }
+
+        .modal-foot {
+            padding: 14px 22px;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 8px; justify-content: flex-end;
+        }
+
+        .btn { padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .13s; font-family: inherit; }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #4f46e5; }
+        .btn-ghost { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: var(--border); color: var(--text); }
+
+        /* ── Scrollbar ──────────────────────────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333348; }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────────── -->
+<div class="header">
+    <div class="logo">
+        <div class="logo-icon">🤖</div>
+        <div>
+            <div class="logo-name">Tareas <span>Claude</span></div>
+            <div class="logo-sub">HyperTrader — Continuidad entre sesiones</div>
+        </div>
+    </div>
+    <div class="header-stats">
+        <div class="stat">
+            <div class="stat-num active" id="cnt-active">0</div>
+            <div class="stat-label">Activas</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num done" id="cnt-done">0</div>
+            <div class="stat-label">Completadas</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN ────────────────────────────────────────────────────────────────── -->
+<div class="container">
+
+    <!-- Claude prompt bar -->
+    <div class="context-bar">
+        <div class="context-bar-icon">💬</div>
+        <div class="context-bar-text">
+            Para retomar con Claude: abre el proyecto y escribe<br>
+            <strong>"Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos"</strong>
+        </div>
+    </div>
+
+    <!-- Add task bar -->
+    <div class="add-bar" onclick="openModal()">
+        <div class="add-bar-icon">+</div>
+        <span class="add-bar-text">Agregar nueva tarea para Claude...</span>
+        <span class="add-bar-shortcut">⌘N</span>
+    </div>
+
+    <!-- Active tasks -->
+    <div class="section-header">
+        <span class="section-title">Tareas Activas</span>
+        <span class="section-badge" id="active-badge">0</span>
+    </div>
+    <div class="tasks-list" id="active-list"></div>
+
+    <!-- Completed tasks -->
+    <div class="completed-section">
+        <div class="section-header">
+            <span class="section-title" style="color:var(--success)">Completadas</span>
+            <span class="section-badge done-badge" id="done-badge">0</span>
+            <button class="section-toggle" id="toggle-btn" onclick="toggleCompleted()" title="Mostrar/ocultar">▾</button>
+        </div>
+        <div class="completed-list" id="done-list"></div>
+    </div>
+
+</div>
+
+<!-- ── MODAL ───────────────────────────────────────────────────────────────── -->
+<div class="overlay" id="overlay" onclick="handleOverlay(event)">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title">Nueva Tarea</span>
+            <button class="modal-close-btn" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label class="form-label">Título <span class="req">*</span></label>
+                <input type="text" id="f-titulo" placeholder="Ej: Migración completa a Bybit" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Prioridad</label>
+                <div class="priority-grid">
+                    <div class="pri-opt sel" data-v="ALTA"  onclick="selPri(this)">🔴 Alta</div>
+                    <div class="pri-opt"     data-v="MEDIA" onclick="selPri(this)">🟡 Media</div>
+                    <div class="pri-opt"     data-v="BAJA"  onclick="selPri(this)">🔵 Baja</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Proyecto / Carpeta</label>
+                    <input type="text" id="f-proyecto" placeholder="Ej: mexc-trader 2" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select id="f-estado">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En progreso">En progreso</option>
+                        <option value="Bloqueado">Bloqueado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Qué debe hacer Claude <span class="req">*</span></label>
+                <textarea id="f-quehace" rows="3" placeholder="Describe claramente la tarea — Claude leerá esto al retomar..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contexto (opcional)</label>
+                <textarea id="f-contexto" rows="2" placeholder="Por qué es necesario, qué pasó antes, qué se intentó..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Archivos clave (opcional)</label>
+                <textarea id="f-archivos" rows="2" placeholder="src/ordenes.py&#10;config/config.yaml"></textarea>
+            </div>
+
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+            <button class="btn btn-primary" onclick="addTask()">Agregar tarea</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA — datos iniciales pre-cargados desde TAREAS_CLAUDE.md
+// ══════════════════════════════════════════════════════════════════════════════
+
+const SEED_TASKS = [
+    {
+        id: 'seed-1',
+        titulo: 'Migración completa a Bybit',
+        prioridad: 'ALTA',
+        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/bybit-trader/',
+        queHacer: 'Ejecutar la migración del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API (auth HMAC diferente, Buy/Sell en lugar de 1/2/3/4)\n2. Adaptar src/multi_bot.py — WS_FUTURES, obtener_balance_futures(), obtener_top_pares(), _conectar_ws(), _on_message()\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulación',
+        contexto: 'El proyecto HyperTrader 2 corre en MEXC. Se quiere migrar a Bybit manteniendo toda la lógica de pro_v2/, riesgo.py, indicadores.py, etc. Solo cambian las capas de comunicación. El plan fue aprobado y detallado, solo falta ejecutarlo.',
+        archivos: 'src/ordenes.py — reescritura completa para Bybit v5\nsrc/multi_bot.py — 5 cambios quirúrgicos\nconfig/config.yaml — reemplazar sección mexc: por bybit:',
+        estado: 'Pendiente',
+        fecha: '2026-04-19',
+    },
+    {
+        id: 'seed-2',
+        titulo: 'Posiciones huérfanas al reiniciar el bot',
+        prioridad: 'ALTA',
+        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+        queHacer: 'Implementar reconciliación de posiciones al arrancar y detección de cierres externos cada 15 min.\n\n→ src/ordenes.py: añadir get_posiciones_abiertas()\n→ src/multi_bot.py: añadir _reconciliar_posiciones_arranque() y detección en _iniciar_sync_balance()',
+        contexto: 'Si el bot se reinicia con posiciones abiertas en MEXC, las pierde de memoria y no puede gestionar SL/TP. GestorRiesgo.__init__() siempre arranca con posiciones=[]. El endpoint existe en el exchange pero no está conectado al bot.',
+        archivos: 'src/ordenes.py\nsrc/multi_bot.py\nsrc/riesgo.py — ya tiene tiene_posicion() y _cerrar_posicion_externa()',
+        estado: 'Pendiente',
+        fecha: '2026-04-19',
+    },
+    {
+        id: 'seed-3',
+        titulo: 'Mejorar estrategia: demasiados loss / breakeven',
+        prioridad: 'MEDIA',
+        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+        queHacer: 'Ajustar dos parámetros en config/config.yaml:\n\n  senales:\n    score_minimo: 80   # era 99\n  indicadores:\n    volumen_multiplicador: 2   # era 12',
+        contexto: 'score_minimo=99 es tan restrictivo que casi ninguna señal pasa el filtro. volumen_multiplicador=12 exige volumen 12x el promedio — rara vez se cumple. Resultado: el bot opera muy poco y cuando lo hace, las entradas son subóptimas.',
+        archivos: 'config/config.yaml',
+        estado: 'Pendiente',
+        fecha: '2026-04-19',
+    },
+    {
+        id: 'seed-4',
+        titulo: 'Fix Hermes CLI con Google Gemini',
+        prioridad: 'MEDIA',
+        proyecto: '/Users/lamaquinadeldinero/.hermes/',
+        queHacer: 'Resolver por qué hermes no carga la API key de Gemini desde .env.\n\nOpciones:\n1. Verificar si hermes carga .env automáticamente (puede que no use python-dotenv)\n2. Probar: export GOOGLE_API_KEY=AIzaSy... antes de correr hermes\n3. O pasar la key como argumento CLI si hermes lo soporta',
+        contexto: 'Se configuró gemini-2.5-flash como modelo para Hermes. La key está en .env y en hermes config set, pero os.getenv("GOOGLE_API_KEY") devuelve vacío en el proceso de hermes. Las llamadas fallan con API_KEY_INVALID. Verificado que la key es válida vía curl directo.',
+        archivos: '/Users/lamaquinadeldinero/.hermes/.env — key en línea ~404\n/Users/lamaquinadeldinero/.hermes/config.yaml — model.provider: gemini\nrun_agent.py línea 1065 — header x-goog-api-key',
+        estado: 'Bloqueado',
+        fecha: '2026-04-19',
+    },
+    {
+        id: 'seed-5',
+        titulo: 'Escalar a 40 posiciones simultáneas',
+        prioridad: 'BAJA',
+        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+        queHacer: 'Solo cambiar dos valores en config/config.yaml (no hay cambios de código):\n\n  riesgo:\n    max_posiciones_global: 40   # era 6\n    max_operaciones_abiertas: 40  # era 6\n    max_por_operacion: 0.010\n    circuit_breaker_pct: 0.10',
+        contexto: 'Actualmente el límite es 6 posiciones. Con más capital ($200+) se pueden gestionar hasta 40 simultáneas. Aplicar solo cuando el capital lo justifique.',
+        archivos: 'config/config.yaml',
+        estado: 'Pendiente',
+        fecha: '2026-04-19',
+    },
+];
+
+const SEED_DONE = [
+    { id: 'done-1',  titulo: 'Dashboard muestra capital real (capital_total)',                fecha: '2026-04-19' },
+    { id: 'done-2',  titulo: 'Dashboard filtra trades reales — últimos 30 días',              fecha: '2026-04-19' },
+    { id: 'done-3',  titulo: 'PnL del dashboard muestra solo trades cerrados HOY',            fecha: '2026-04-19' },
+    { id: 'done-4',  titulo: 'Limpieza de 60 archivos muertos (56,320 líneas eliminadas)',    fecha: '2026-04-19' },
+    { id: 'done-5',  titulo: 'Leverage correcto en PnL — actualizar_pnl multiplica leverage', fecha: '2026-04-18' },
+    { id: 'done-6',  titulo: 'GestorRiesgo recibe parámetro leverage',                        fecha: '2026-04-18' },
+    { id: 'done-7',  titulo: 'tiene_posicion() y tiene_posicion_opuesta() en riesgo.py',      fecha: '2026-04-18' },
+    { id: 'done-8',  titulo: '_cerrar_posicion_externa() en riesgo.py',                       fecha: '2026-04-18' },
+    { id: 'done-9',  titulo: 'Circuit breaker basado en equity real',                         fecha: '2026-04-17' },
+    { id: 'done-10', titulo: 'Stop loss fijo 3% independiente de ATR',                        fecha: '2026-04-17' },
+];
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════════
+
+const STORAGE_KEY = 'claude-tasks-v3';
+
+function load() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return { tasks: SEED_TASKS, done: SEED_DONE };
+}
+
+function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = load();
+let completedOpen = true;
+let curPri = 'ALTA';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function esc(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function uid() { return 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2,7); }
+
+function priBadge(p) {
+    const map = { ALTA:'badge-alta', MEDIA:'badge-media', BAJA:'badge-baja', BLOQUEADO:'badge-bloqueado' };
+    return `<span class="badge ${map[p]||'badge-pendiente'}">${p}</span>`;
+}
+
+function estadoBadge(e) {
+    if (e === 'En progreso') return `<span class="badge badge-progreso" style="font-size:10px">En progreso</span>`;
+    if (e === 'Bloqueado')   return `<span class="badge badge-bloqueado" style="font-size:10px">Bloqueado</span>`;
+    return '';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderTask(t) {
+    const hasDetails = t.contexto || t.archivos;
+    return `
+    <div class="task-card" data-id="${t.id}" data-prioridad="${t.prioridad}">
+        <div class="task-main">
+            <div class="task-top">
+                ${priBadge(t.prioridad)}
+                <span class="task-title">${esc(t.titulo)}</span>
+                <div class="task-actions">
+                    ${estadoBadge(t.estado)}
+                    <button class="btn-icon btn-complete" title="Marcar como completada" onclick="completeTask('${t.id}')">✓</button>
+                    <button class="btn-icon btn-delete"   title="Eliminar tarea"         onclick="deleteTask('${t.id}')">✕</button>
+                </div>
+            </div>
+            ${t.proyecto ? `<div class="task-project">${esc(t.proyecto)}</div>` : ''}
+            <div class="task-description">${esc(t.queHacer).replace(/\n/g,'<br>')}</div>
+        </div>
+        ${hasDetails ? `
+            <div class="task-details" id="det-${t.id}">
+                <div class="task-details-inner">
+                    ${t.contexto ? `<div class="detail-block"><label>Contexto</label><p>${esc(t.contexto).replace(/\n/g,'<br>')}</p></div>` : ''}
+                    ${t.archivos ? `<div class="detail-block"><label>Archivos clave</label><pre>${esc(t.archivos)}</pre></div>` : ''}
+                </div>
+            </div>
+            <button class="expand-btn" onclick="toggleDet('${t.id}',this)">
+                <span class="chevron" id="chev-${t.id}">▾</span>
+                <span id="explbl-${t.id}">Ver contexto y archivos</span>
+            </button>
+        ` : ''}
+    </div>`;
+}
+
+function renderDone(d) {
+    return `
+    <div class="completed-card" data-id="${d.id}">
+        <div class="check-circle">✓</div>
+        <span class="completed-title">${esc(d.titulo)}</span>
+        <span class="completed-date">${d.fecha||''}</span>
+        <button class="btn-icon btn-delete" style="width:24px;height:24px;font-size:11px;flex-shrink:0"
+                title="Eliminar" onclick="deleteDone('${d.id}')">✕</button>
+    </div>`;
+}
+
+function render() {
+    const al = document.getElementById('active-list');
+    const dl = document.getElementById('done-list');
+
+    al.innerHTML = state.tasks.length
+        ? state.tasks.map(renderTask).join('')
+        : `<div class="empty-state">
+               <div class="empty-state-emoji">🎯</div>
+               <div class="empty-state-text">No hay tareas activas. ¡Todo bajo control!</div>
+           </div>`;
+
+    dl.innerHTML = state.done.length
+        ? state.done.map(renderDone).join('')
+        : `<div class="empty-state" style="padding:18px">
+               <div class="empty-state-text">Nada completado aún</div>
+           </div>`;
+
+    const a = state.tasks.length, d = state.done.length;
+    document.getElementById('cnt-active').textContent    = a;
+    document.getElementById('cnt-done').textContent      = d;
+    document.getElementById('active-badge').textContent  = a;
+    document.getElementById('done-badge').textContent    = d;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function completeTask(id) {
+    const idx = state.tasks.findIndex(t => t.id === id);
+    if (idx === -1) return;
+    const t = state.tasks[idx];
+    const card = document.querySelector(`.task-card[data-id="${id}"]`);
+    if (card) card.classList.add('removing');
+    setTimeout(() => {
+        state.tasks.splice(idx, 1);
+        state.done.unshift({ id: uid(), titulo: t.titulo, fecha: new Date().toISOString().slice(0,10) });
+        save(); render();
+    }, 280);
+}
+
+function deleteTask(id) {
+    const card = document.querySelector(`.task-card[data-id="${id}"]`);
+    if (card) card.classList.add('removing');
+    setTimeout(() => {
+        state.tasks = state.tasks.filter(t => t.id !== id);
+        save(); render();
+    }, 280);
+}
+
+function deleteDone(id) {
+    const card = document.querySelector(`.completed-card[data-id="${id}"]`);
+    if (card) { card.style.opacity='0'; card.style.transform='translateX(14px)'; card.style.transition='all .22s ease'; }
+    setTimeout(() => {
+        state.done = state.done.filter(d => d.id !== id);
+        save(); render();
+    }, 220);
+}
+
+function toggleDet(id, btn) {
+    const det  = document.getElementById(`det-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    const lbl  = document.getElementById(`explbl-${id}`);
+    const open = det.classList.toggle('open');
+    chev.classList.toggle('open', open);
+    lbl.textContent = open ? 'Ocultar detalles' : 'Ver contexto y archivos';
+}
+
+function toggleCompleted() {
+    completedOpen = !completedOpen;
+    document.getElementById('done-list').classList.toggle('collapsed', !completedOpen);
+    document.getElementById('toggle-btn').textContent = completedOpen ? '▾' : '▸';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+function openModal() {
+    document.getElementById('overlay').classList.add('open');
+    setTimeout(() => document.getElementById('f-titulo').focus(), 80);
+}
+
+function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
+    resetForm();
+}
+
+function handleOverlay(e) {
+    if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+function selPri(el) {
+    document.querySelectorAll('.pri-opt').forEach(o => o.classList.remove('sel'));
+    el.classList.add('sel');
+    curPri = el.dataset.v;
+}
+
+function resetForm() {
+    ['f-titulo','f-proyecto','f-quehace','f-contexto','f-archivos'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    document.getElementById('f-estado').value = 'Pendiente';
+    curPri = 'ALTA';
+    document.querySelectorAll('.pri-opt').forEach(o => o.classList.toggle('sel', o.dataset.v === 'ALTA'));
+}
+
+function addTask() {
+    const titulo   = document.getElementById('f-titulo').value.trim();
+    const queHacer = document.getElementById('f-quehace').value.trim();
+
+    if (!titulo) {
+        const el = document.getElementById('f-titulo');
+        el.style.borderColor = 'var(--alta)';
+        el.focus();
+        setTimeout(() => el.style.borderColor = '', 1800);
+        return;
+    }
+
+    const task = {
+        id:        uid(),
+        titulo,
+        prioridad: curPri,
+        proyecto:  document.getElementById('f-proyecto').value.trim(),
+        queHacer:  queHacer || '(por definir)',
+        contexto:  document.getElementById('f-contexto').value.trim(),
+        archivos:  document.getElementById('f-archivos').value.trim(),
+        estado:    document.getElementById('f-estado').value,
+        fecha:     new Date().toISOString().slice(0,10),
+    };
+
+    state.tasks.unshift(task);
+    save();
+    closeModal();
+    render();
+    setTimeout(() => document.getElementById('active-list').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════════════════════════════════════════
+
+document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); openModal(); return; }
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT' &&
+        document.getElementById('overlay').classList.contains('open')) { addTask(); }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
