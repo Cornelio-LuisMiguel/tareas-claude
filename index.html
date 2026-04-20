@@ -733,44 +733,61 @@ async function fetchFromGitHub(silent = false) {
             }
         });
         if (r.status === 404) {
-            // File doesn't exist yet — create it
-            await pushToGitHub(true);
+            // Archivo no existe aún — crearlo con el estado actual
+            await pushToGitHub();
             return;
         }
-        if (!r.ok) throw new Error(`GitHub API ${r.status}`);
-        const data    = await r.json();
-        ghSha         = data.sha;
+        if (r.status === 401) { setSyncStatus('error', 'Token inválido'); return; }
+        if (!r.ok) throw new Error(`GitHub ${r.status}`);
+
+        const data   = await r.json();
+        ghSha        = data.sha;   // guardar SHA para el próximo push
         localStorage.setItem(SHA_KEY, ghSha);
-        const remote  = JSON.parse(atob(data.content.replace(/\n/g,'')));
-        // Use remote if it has a lastModified newer than local
+
+        const remote = JSON.parse(atob(data.content.replace(/\n/g, '')));
         const localTs  = state.lastModified  || 0;
         const remoteTs = remote.lastModified || 0;
-        if (remoteTs > localTs) {
+
+        // Usar remoto si es más reciente O si local nunca se ha sincronizado
+        if (remoteTs >= localTs && ((remote.tasks||[]).length + (remote.done||[]).length) > 0) {
             state = remote;
             saveLocal();
             render();
-            if (!silent) toast('☁ Tareas actualizadas desde GitHub', 'ok');
+            if (!silent && remoteTs > localTs) toast('☁ Sincronizado desde GitHub');
         }
         setSyncStatus('synced');
     } catch(e) {
-        setSyncStatus('error', 'Error al conectar');
-        if (!silent) toast('⚠ No se pudo conectar con GitHub', 'warn');
+        setSyncStatus('error', 'Sin conexión');
+        if (!silent) toast('⚠ No se pudo conectar: ' + e.message, 'warn');
     }
 }
 
-async function pushToGitHub(forceCreate = false) {
+async function pushToGitHub() {
     if (!ghToken) return;
     setSyncStatus('saving');
     try {
-        const payload = { ...state, lastModified: Date.now() };
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
-        const body    = {
-            message: `sync: ${new Date().toISOString()}`,
-            content,
-        };
-        if (ghSha && !forceCreate) body.sha = ghSha;
+        // PASO 1 — obtener SHA fresco (evita todos los errores 409/422)
+        const getR = await fetch(GH_API, {
+            headers: {
+                'Authorization': `Bearer ${ghToken}`,
+                'Accept':        'application/vnd.github.v3+json',
+                'Cache-Control': 'no-cache',
+            }
+        });
+        if (getR.ok) {
+            const getData = await getR.json();
+            ghSha = getData.sha;
+            localStorage.setItem(SHA_KEY, ghSha);
+        }
 
-        const r = await fetch(GH_API, {
+        // PASO 2 — escribir con SHA fresco
+        const ts      = Date.now();
+        const payload = { tasks: state.tasks, done: state.done, lastModified: ts };
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+        const body    = { message: `sync: ${new Date().toISOString()}`, content };
+        if (ghSha) body.sha = ghSha;
+
+        const putR = await fetch(GH_API, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${ghToken}`,
@@ -780,21 +797,20 @@ async function pushToGitHub(forceCreate = false) {
             body: JSON.stringify(body),
         });
 
-        if (r.status === 409) {
-            // SHA conflict — fetch first, then retry
-            await fetchFromGitHub(true);
-            await pushToGitHub();
-            return;
+        if (!putR.ok) {
+            const errBody = await putR.json().catch(() => ({}));
+            throw new Error(`${putR.status}: ${errBody.message || ''}`);
         }
-        if (!r.ok) throw new Error(`GitHub API ${r.status}`);
 
-        const data = await r.json();
-        ghSha      = data.content.sha;
+        const putData   = await putR.json();
+        ghSha           = putData.content.sha;
         localStorage.setItem(SHA_KEY, ghSha);
-        state.lastModified = payload.lastModified;
+        state.lastModified = ts;
+        saveLocal();
         setSyncStatus('synced');
     } catch(e) {
         setSyncStatus('error', 'Error al guardar');
+        toast('⚠ Sync falló: ' + e.message, 'warn');
     }
 }
 
@@ -814,11 +830,11 @@ function renderSyncPanel() {
 
     if (!ghToken) {
         panel.innerHTML = `
-            <div class="sync-panel-head">Sincronización automática</div>
+            <div class="sync-panel-head">Activar sincronización</div>
             <div class="sync-panel-body">
                 <div class="sync-info">
-                    Conecta tu <strong>GitHub Token</strong> para guardar los cambios automáticamente.
-                    Cualquier dispositivo con la misma URL verá siempre la versión más reciente.
+                    Pega tu <strong>GitHub Token</strong> — los cambios se guardan solos.<br>
+                    <span style="color:var(--media);font-size:11px">⚠ Hay que hacerlo una vez por dispositivo/navegador.</span>
                 </div>
                 <div class="sync-input-row">
                     <input class="sync-input" type="password" id="token-input"
