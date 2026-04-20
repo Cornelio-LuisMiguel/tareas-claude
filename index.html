@@ -38,184 +38,262 @@
             line-height: 1.5;
         }
 
-        /* ── Header ─────────────────────────────────────────────────────── */
+        /* ── Header ────────────────────────────────────────────────────── */
         .header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 16px 28px;
+            padding: 15px 26px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            gap: 18px;
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo { display: flex; align-items: center; gap: 11px; }
 
         .logo-icon {
-            width: 36px; height: 36px;
+            width: 34px; height: 34px;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
             border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 17px; flex-shrink: 0;
+            font-size: 16px; flex-shrink: 0;
         }
-
-        .logo-name { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; }
+        .logo-name { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
         .logo-name span { color: var(--accent); }
-        .logo-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .logo-sub  { font-size: 10.5px; color: var(--text-muted); }
 
-        .header-stats { display: flex; gap: 20px; margin-left: auto; }
-
+        .header-stats { display: flex; gap: 18px; margin-left: auto; }
         .stat { text-align: center; }
-        .stat-num { font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+        .stat-num { font-size: 21px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
         .stat-num.active { color: var(--accent); }
         .stat-num.done   { color: var(--success); }
-        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px; }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .header-actions { display: flex; gap: 8px; }
+        /* ── Sync pill ──────────────────────────────────────────────────── */
+        .sync-wrap { position: relative; }
 
-        .btn-header {
-            display: flex; align-items: center; gap: 6px;
-            padding: 7px 13px;
+        .sync-pill {
+            display: flex; align-items: center; gap: 7px;
+            padding: 6px 13px;
             background: var(--surface2);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-muted);
+            border-radius: 20px;
             font-size: 12px; font-weight: 600;
+            cursor: pointer; color: var(--text-muted);
+            transition: all .15s; white-space: nowrap; font-family: inherit;
+        }
+        .sync-pill:hover { border-color: var(--accent); color: var(--text); }
+        .sync-pill.synced  { border-color: rgba(34,197,94,0.35); color: var(--success); background: var(--success-bg); }
+        .sync-pill.syncing { border-color: rgba(99,102,241,0.35); color: var(--accent); background: var(--accent-bg); }
+        .sync-pill.error   { border-color: rgba(245,158,11,0.35); color: var(--media); background: var(--media-bg); }
+
+        .sync-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--text-muted); flex-shrink: 0;
+            transition: background .3s;
+        }
+        .sync-pill.synced  .sync-dot { background: var(--success); }
+        .sync-pill.syncing .sync-dot { background: var(--accent); animation: pulse 1s infinite; }
+        .sync-pill.error   .sync-dot { background: var(--media); }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: .4; transform: scale(0.7); }
+        }
+
+        /* ── Sync dropdown panel ────────────────────────────────────────── */
+        .sync-panel {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            width: 300px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            z-index: 200;
+            overflow: hidden;
+            opacity: 0; pointer-events: none;
+            transform: translateY(-6px);
+            transition: opacity .15s, transform .15s;
+        }
+        .sync-panel.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+        .sync-panel-head {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .sync-panel-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+        .sync-info {
+            font-size: 12px; color: var(--text-dim); line-height: 1.5;
+        }
+        .sync-info strong { color: var(--text); }
+
+        .sync-input-row { display: flex; gap: 8px; }
+
+        .sync-input {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 8px 10px;
+            color: var(--text); font-size: 12.5px;
+            font-family: 'SF Mono', monospace;
+            transition: border-color .15s;
+        }
+        .sync-input:focus { outline: none; border-color: var(--accent); }
+
+        .sync-btn-primary {
+            padding: 8px 14px;
+            background: var(--accent); color: #fff;
+            border: none; border-radius: 7px;
+            font-size: 12.5px; font-weight: 700;
+            cursor: pointer; transition: background .13s; font-family: inherit;
+            white-space: nowrap;
+        }
+        .sync-btn-primary:hover { background: #4f46e5; }
+
+        .sync-status-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px;
+            background: var(--surface2); border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .sync-status-icon { font-size: 16px; flex-shrink: 0; }
+        .sync-status-text { flex: 1; font-size: 12px; color: var(--text-dim); }
+        .sync-status-text strong { display: block; color: var(--text); font-size: 12.5px; }
+
+        .sync-btn-danger {
+            padding: 5px 10px;
+            background: var(--alta-bg); color: var(--alta);
+            border: 1px solid transparent; border-radius: 6px;
+            font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: background .13s; font-family: inherit;
+        }
+        .sync-btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+        .sync-last {
+            font-size: 11px; color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ── Header actions ─────────────────────────────────────────────── */
+        .header-actions { display: flex; gap: 7px; }
+
+        .btn-header {
+            display: flex; align-items: center; gap: 5px;
+            padding: 6px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text-muted);
+            font-size: 11.5px; font-weight: 600;
             cursor: pointer; white-space: nowrap;
             transition: all .15s; font-family: inherit;
         }
         .btn-header:hover { background: var(--border); color: var(--text); }
-        .btn-header.export:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
-        .btn-header.import:hover { border-color: var(--success); color: var(--success); background: var(--success-bg); }
 
         /* ── Container ──────────────────────────────────────────────────── */
-        .container { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
+        .container { max-width: 860px; margin: 0 auto; padding: 26px 20px 60px; }
 
         /* ── Claude context bar ─────────────────────────────────────────── */
         .context-bar {
-            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
-            border: 1px solid rgba(99,102,241,0.22);
+            background: linear-gradient(135deg, rgba(99,102,241,0.07), rgba(139,92,246,0.07));
+            border: 1px solid rgba(99,102,241,0.20);
             border-radius: var(--radius);
-            padding: 12px 16px;
-            margin-bottom: 20px;
+            padding: 11px 16px;
+            margin-bottom: 18px;
             display: flex; align-items: center; gap: 12px;
         }
-        .context-bar-icon { font-size: 20px; flex-shrink: 0; }
+        .context-bar-icon { font-size: 18px; flex-shrink: 0; }
         .context-bar-text { font-size: 12px; color: var(--text-dim); line-height: 1.5; flex: 1; }
         .context-bar-text strong {
             color: var(--accent);
-            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-            font-size: 11.5px;
+            font-family: 'SF Mono', monospace; font-size: 11px;
             background: rgba(99,102,241,0.12);
-            padding: 1px 6px; border-radius: 4px;
+            padding: 1px 5px; border-radius: 4px;
         }
         .btn-copy-prompt {
-            padding: 6px 12px;
+            padding: 5px 11px;
             background: var(--accent-bg);
-            border: 1px solid rgba(99,102,241,0.25);
-            border-radius: 7px;
-            color: var(--accent); font-size: 11.5px; font-weight: 600;
+            border: 1px solid rgba(99,102,241,0.22);
+            border-radius: 6px;
+            color: var(--accent); font-size: 11px; font-weight: 700;
             cursor: pointer; white-space: nowrap;
             transition: all .15s; font-family: inherit; flex-shrink: 0;
         }
-        .btn-copy-prompt:hover { background: rgba(99,102,241,0.2); }
+        .btn-copy-prompt:hover { background: rgba(99,102,241,0.18); }
 
         /* ── Add-task bar ───────────────────────────────────────────────── */
         .add-bar {
             background: var(--surface);
             border: 1.5px dashed var(--border);
             border-radius: var(--radius);
-            padding: 13px 18px;
-            margin-bottom: 26px;
-            display: flex; align-items: center; gap: 12px;
-            cursor: pointer;
-            transition: border-color .2s, background .2s;
-            user-select: none;
+            padding: 12px 17px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 11px;
+            cursor: pointer; transition: border-color .18s, background .18s; user-select: none;
         }
         .add-bar:hover { border-color: var(--accent); background: var(--surface2); }
 
         .add-bar-icon {
-            width: 28px; height: 28px;
-            background: var(--accent-bg);
-            border: 1px solid rgba(99,102,241,0.25);
-            border-radius: 7px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--accent); font-size: 20px; font-weight: 300;
-            flex-shrink: 0; line-height: 1;
+            width: 27px; height: 27px;
+            background: var(--accent-bg); border: 1px solid rgba(99,102,241,0.22);
+            border-radius: 7px; display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 19px; font-weight: 300; flex-shrink: 0; line-height: 1;
         }
         .add-bar-text { color: var(--text-muted); font-size: 13.5px; flex: 1; }
         .add-bar-shortcut {
             background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 5px; padding: 3px 8px;
-            font-size: 11px; color: var(--text-muted); font-family: monospace;
+            border-radius: 5px; padding: 2px 7px;
+            font-size: 10.5px; color: var(--text-muted); font-family: monospace;
         }
 
         /* ── Section header ─────────────────────────────────────────────── */
-        .section-header {
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 14px;
-        }
+        .section-header { display: flex; align-items: center; gap: 9px; margin-bottom: 13px; }
         .section-title {
-            font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.9px; color: var(--text-muted);
         }
         .section-badge {
             background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 20px; padding: 2px 9px;
-            font-size: 11px; font-weight: 700; color: var(--text-muted);
+            border-radius: 20px; padding: 2px 8px;
+            font-size: 10.5px; font-weight: 700; color: var(--text-muted);
         }
-        .section-badge.done-badge {
-            background: var(--success-bg);
-            border-color: rgba(34,197,94,0.2);
-            color: var(--success);
-        }
+        .section-badge.done-badge { background: var(--success-bg); border-color: rgba(34,197,94,0.2); color: var(--success); }
         .section-toggle {
             margin-left: auto; background: none; border: none;
-            color: var(--text-muted); cursor: pointer; font-size: 15px;
-            padding: 4px 6px; border-radius: 5px; transition: color .15s, background .15s;
-            line-height: 1;
+            color: var(--text-muted); cursor: pointer; font-size: 14px;
+            padding: 3px 5px; border-radius: 4px; transition: color .15s, background .15s; line-height: 1;
         }
         .section-toggle:hover { background: var(--surface2); color: var(--text); }
 
         /* ── Tasks list ─────────────────────────────────────────────────── */
-        .tasks-list { display: flex; flex-direction: column; gap: 10px; }
+        .tasks-list { display: flex; flex-direction: column; gap: 9px; }
 
         /* ── Task card ──────────────────────────────────────────────────── */
         .task-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 3px solid transparent;
-            border-radius: var(--radius);
-            overflow: hidden;
-            animation: slideIn .22s ease;
+            background: var(--surface); border: 1px solid var(--border);
+            border-left: 3px solid transparent; border-radius: var(--radius);
+            overflow: hidden; animation: slideIn .2s ease;
         }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .task-card.removing { animation: slideOut .25s ease forwards; }
-        @keyframes slideOut {
-            to { opacity: 0; transform: translateX(14px); max-height: 0; margin: 0; border: none; }
-        }
+        @keyframes slideIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+        .task-card.removing { animation: slideOut .22s ease forwards; }
+        @keyframes slideOut { to { opacity:0; transform:translateX(12px); max-height:0; margin:0; border:none; } }
 
         .task-card[data-prioridad="ALTA"]      { border-left-color: var(--alta); }
         .task-card[data-prioridad="MEDIA"]     { border-left-color: var(--media); }
         .task-card[data-prioridad="BAJA"]      { border-left-color: var(--baja); }
         .task-card[data-prioridad="BLOQUEADO"] { border-left-color: var(--bloqueado); }
 
-        .task-main { padding: 14px 17px; }
-
-        .task-top {
-            display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px;
-        }
+        .task-main { padding: 13px 16px; }
+        .task-top  { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 7px; }
 
         .badge {
-            padding: 3px 8px; border-radius: 5px;
-            font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
-            text-transform: uppercase; flex-shrink: 0; margin-top: 1px;
+            padding: 2px 7px; border-radius: 4px;
+            font-size: 9.5px; font-weight: 800; letter-spacing: 0.4px;
+            text-transform: uppercase; flex-shrink: 0; margin-top: 2px;
         }
         .badge-alta      { background: var(--alta-bg);      color: var(--alta); }
         .badge-media     { background: var(--media-bg);     color: var(--media); }
@@ -224,354 +302,183 @@
         .badge-pendiente { background: var(--surface2);     color: var(--text-muted); }
         .badge-progreso  { background: var(--accent-bg);    color: var(--accent); }
 
-        .task-title { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.3; }
-
-        .task-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+        .task-title  { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.3; }
+        .task-actions { display: flex; gap: 5px; flex-shrink: 0; align-items: center; }
 
         .btn-icon {
-            width: 27px; height: 27px; border: none; border-radius: 7px;
+            width: 26px; height: 26px; border: none; border-radius: 6px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 12px; transition: background .12s, transform .1s;
         }
         .btn-icon:active { transform: scale(0.9); }
         .btn-complete { background: var(--success-bg); color: var(--success); }
-        .btn-complete:hover { background: rgba(34,197,94,0.2); }
+        .btn-complete:hover { background: rgba(34,197,94,0.22); }
         .btn-delete   { background: var(--alta-bg); color: var(--alta); }
-        .btn-delete:hover { background: rgba(239,68,68,0.2); }
+        .btn-delete:hover { background: rgba(239,68,68,0.22); }
 
         .task-project {
-            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-            font-size: 11px; color: var(--text-muted); margin-bottom: 7px;
+            font-family: 'SF Mono', monospace;
+            font-size: 10.5px; color: var(--text-muted); margin-bottom: 7px;
             display: flex; align-items: center; gap: 5px;
         }
-        .task-project::before {
-            content: ''; width: 3px; height: 3px;
-            background: currentColor; border-radius: 50%; flex-shrink: 0;
-        }
+        .task-project::before { content:''; width:3px; height:3px; background:currentColor; border-radius:50%; flex-shrink:0; }
 
-        .task-description { font-size: 13px; color: var(--text-dim); line-height: 1.65; }
+        .task-description { font-size: 12.5px; color: var(--text-dim); line-height: 1.65; }
 
         /* ── Expandable details ─────────────────────────────────────────── */
-        .task-details {
-            border-top: 1px solid var(--border);
-            max-height: 0; overflow: hidden;
-            transition: max-height .32s cubic-bezier(0.4,0,0.2,1);
-        }
+        .task-details { border-top: 1px solid var(--border); max-height:0; overflow:hidden; transition: max-height .3s cubic-bezier(0.4,0,0.2,1); }
         .task-details.open { max-height: 800px; }
-
-        .task-details-inner {
-            padding: 13px 17px;
-            display: flex; flex-direction: column; gap: 11px;
-        }
-
-        .detail-block label {
-            display: block; font-size: 10px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.7px;
-            color: var(--text-muted); margin-bottom: 5px;
-        }
-        .detail-block p   { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
+        .task-details-inner { padding: 12px 16px; display: flex; flex-direction: column; gap: 11px; }
+        .detail-block label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-muted); margin-bottom:4px; }
+        .detail-block p   { font-size:12px; color:var(--text-dim); line-height:1.6; }
         .detail-block pre {
-            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-            font-size: 11.5px; color: var(--text-dim);
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 6px; padding: 9px 11px;
-            white-space: pre-wrap; word-break: break-all; line-height: 1.55;
+            font-family:'SF Mono',monospace; font-size:11px; color:var(--text-dim);
+            background:var(--surface2); border:1px solid var(--border); border-radius:6px;
+            padding:9px 11px; white-space:pre-wrap; word-break:break-all; line-height:1.55;
         }
-
         .expand-btn {
-            width: 100%; background: none; border: none;
-            border-top: 1px solid var(--border);
-            padding: 7px; color: var(--text-muted); font-size: 11px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            gap: 5px; transition: background .12s, color .12s; font-family: inherit;
+            width:100%; background:none; border:none; border-top:1px solid var(--border);
+            padding:7px; color:var(--text-muted); font-size:11px;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            gap:5px; transition:background .12s,color .12s; font-family:inherit;
         }
-        .expand-btn:hover { background: var(--surface2); color: var(--text); }
-
-        .chevron { display: inline-block; transition: transform .22s; font-size: 9px; }
-        .chevron.open { transform: rotate(180deg); }
+        .expand-btn:hover { background:var(--surface2); color:var(--text); }
+        .chevron { display:inline-block; transition:transform .2s; font-size:9px; }
+        .chevron.open { transform:rotate(180deg); }
 
         /* ── Empty state ────────────────────────────────────────────────── */
-        .empty-state { text-align: center; padding: 44px 20px; color: var(--text-muted); }
-        .empty-state-emoji { font-size: 34px; margin-bottom: 10px; opacity: .45; }
-        .empty-state-text  { font-size: 13.5px; }
+        .empty-state { text-align:center; padding:40px 20px; color:var(--text-muted); }
+        .empty-state-emoji { font-size:32px; margin-bottom:10px; opacity:.4; }
+        .empty-state-text  { font-size:13px; }
 
         /* ── Completed section ──────────────────────────────────────────── */
-        .completed-section { margin-top: 38px; }
-        .completed-section .section-header {
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .completed-list {
-            display: flex; flex-direction: column; gap: 6px;
-            overflow: hidden; max-height: 9999px;
-            transition: max-height .4s ease;
-        }
-        .completed-list.collapsed { max-height: 0; }
+        .completed-section { margin-top: 36px; }
+        .completed-section .section-header { padding-bottom: 11px; border-bottom: 1px solid var(--border); }
+        .completed-list { display:flex; flex-direction:column; gap:6px; overflow:hidden; max-height:9999px; transition:max-height .4s ease; }
+        .completed-list.collapsed { max-height:0; }
 
         .completed-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--success);
-            border-radius: var(--radius);
-            padding: 10px 15px;
-            display: flex; align-items: center; gap: 10px;
-            animation: slideIn .18s ease;
-            transition: opacity .2s, transform .2s;
+            background:var(--surface); border:1px solid var(--border);
+            border-left:3px solid var(--success); border-radius:var(--radius);
+            padding:9px 14px; display:flex; align-items:center; gap:10px;
+            animation:slideIn .18s ease; transition:opacity .2s,transform .2s;
         }
-
         .check-circle {
-            width: 21px; height: 21px; flex-shrink: 0;
-            background: var(--success-bg);
-            border: 1.5px solid rgba(34,197,94,0.35);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--success); font-size: 11px; font-weight: 700;
+            width:20px; height:20px; flex-shrink:0;
+            background:var(--success-bg); border:1.5px solid rgba(34,197,94,.32); border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            color:var(--success); font-size:10px; font-weight:700;
         }
-
-        .completed-title {
-            flex: 1; font-size: 13px;
-            color: var(--text-muted);
-            text-decoration: line-through;
-            text-decoration-color: rgba(100,116,139,0.45);
-        }
-
-        .completed-date {
-            font-size: 10.5px; color: var(--text-muted);
-            opacity: .5; white-space: nowrap; flex-shrink: 0;
-        }
+        .completed-title { flex:1; font-size:12.5px; color:var(--text-muted); text-decoration:line-through; text-decoration-color:rgba(100,116,139,.4); }
+        .completed-date  { font-size:10px; color:var(--text-muted); opacity:.5; white-space:nowrap; flex-shrink:0; }
 
         /* ── Toast ──────────────────────────────────────────────────────── */
         .toast {
-            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 13px; color: var(--text);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            z-index: 9999;
-            opacity: 0; pointer-events: none;
-            transition: opacity .2s, transform .2s;
-            white-space: nowrap;
+            position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(6px);
+            background:var(--surface); border:1px solid var(--border); border-radius:9px;
+            padding:9px 18px; font-size:12.5px; color:var(--text);
+            box-shadow:0 8px 30px rgba(0,0,0,.4); z-index:9999;
+            opacity:0; pointer-events:none; transition:opacity .18s,transform .18s; white-space:nowrap;
         }
-        .toast.show {
-            opacity: 1; transform: translateX(-50%) translateY(0);
-        }
-        .toast.success { border-color: rgba(34,197,94,0.35); }
-        .toast.error   { border-color: rgba(239,68,68,0.35); }
+        .toast.show  { opacity:1; transform:translateX(-50%) translateY(0); }
+        .toast.ok    { border-color:rgba(34,197,94,.3); }
+        .toast.warn  { border-color:rgba(245,158,11,.3); }
+        .toast.err   { border-color:rgba(239,68,68,.3); }
 
-        /* ── Import modal ───────────────────────────────────────────────── */
-        .import-modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.72);
-            z-index: 998;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-            opacity: 0; pointer-events: none;
-            transition: opacity .18s;
-            backdrop-filter: blur(6px);
-        }
-        .import-modal-overlay.open { opacity: 1; pointer-events: all; }
-
-        .import-modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            width: 100%; max-width: 420px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-            transform: translateY(16px) scale(0.97);
-            transition: transform .22s cubic-bezier(0.34,1.46,0.64,1);
-            overflow: hidden;
-        }
-        .import-modal-overlay.open .import-modal { transform: translateY(0) scale(1); }
-
-        .import-modal-head {
-            padding: 18px 22px 14px;
-            border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 12px;
-        }
-        .import-modal-icon {
-            width: 36px; height: 36px; border-radius: 9px;
-            background: var(--success-bg);
-            border: 1px solid rgba(34,197,94,0.25);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 17px; flex-shrink: 0;
-        }
-        .import-modal-title { font-size: 15px; font-weight: 700; }
-        .import-modal-sub   { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
-
-        .import-modal-body { padding: 18px 22px; }
-        .import-info {
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;
-            font-size: 12.5px; color: var(--text-dim); line-height: 1.6;
-        }
-        .import-info strong { color: var(--text); }
-
-        .import-modal-foot {
-            padding: 14px 22px;
-            border-top: 1px solid var(--border);
-            display: flex; gap: 8px;
-        }
-        .btn-import-replace {
-            flex: 1; padding: 9px 14px; border-radius: 8px; border: none;
-            background: var(--alta-bg); color: var(--alta);
-            font-size: 12.5px; font-weight: 700; cursor: pointer;
-            transition: background .13s; font-family: inherit;
-        }
-        .btn-import-replace:hover { background: rgba(239,68,68,0.2); }
-
-        .btn-import-merge {
-            flex: 1; padding: 9px 14px; border-radius: 8px; border: none;
-            background: var(--success-bg); color: var(--success);
-            font-size: 12.5px; font-weight: 700; cursor: pointer;
-            transition: background .13s; font-family: inherit;
-        }
-        .btn-import-merge:hover { background: rgba(34,197,94,0.2); }
-
-        .btn-import-cancel {
-            padding: 9px 14px; border-radius: 8px;
-            background: var(--surface2); color: var(--text-muted);
-            border: 1px solid var(--border);
-            font-size: 12.5px; font-weight: 600; cursor: pointer;
-            transition: background .13s; font-family: inherit;
-        }
-        .btn-import-cancel:hover { background: var(--border); color: var(--text); }
-
-        /* ── New task modal ─────────────────────────────────────────────── */
+        /* ── Task modal ─────────────────────────────────────────────────── */
         .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.72);
-            z-index: 999;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-            opacity: 0; pointer-events: none;
-            transition: opacity .18s;
-            backdrop-filter: blur(6px);
+            position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:999;
+            display:flex; align-items:center; justify-content:center; padding:20px;
+            opacity:0; pointer-events:none; transition:opacity .18s; backdrop-filter:blur(6px);
         }
-        .overlay.open { opacity: 1; pointer-events: all; }
-
+        .overlay.open { opacity:1; pointer-events:all; }
         .modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            width: 100%; max-width: 540px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-            transform: translateY(20px) scale(0.96);
-            transition: transform .25s cubic-bezier(0.34,1.46,0.64,1);
-            max-height: 90vh; overflow-y: auto;
+            background:var(--surface); border:1px solid var(--border); border-radius:14px;
+            width:100%; max-width:530px;
+            box-shadow:0 24px 60px rgba(0,0,0,.5);
+            transform:translateY(18px) scale(0.96);
+            transition:transform .24s cubic-bezier(0.34,1.46,0.64,1);
+            max-height:90vh; overflow-y:auto;
         }
-        .overlay.open .modal { transform: translateY(0) scale(1); }
-
-        .modal-head {
-            padding: 18px 22px 15px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        .modal-title { font-size: 15px; font-weight: 700; }
-
+        .overlay.open .modal { transform:translateY(0) scale(1); }
+        .modal-head { padding:17px 21px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+        .modal-title { font-size:15px; font-weight:700; }
         .modal-close-btn {
-            width: 26px; height: 26px;
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 6px; cursor: pointer; color: var(--text-muted);
-            font-size: 14px; display: flex; align-items: center; justify-content: center;
-            transition: background .12s, color .12s;
+            width:25px; height:25px; background:var(--surface2); border:1px solid var(--border);
+            border-radius:6px; cursor:pointer; color:var(--text-muted); font-size:13px;
+            display:flex; align-items:center; justify-content:center; transition:background .12s,color .12s;
         }
-        .modal-close-btn:hover { background: var(--border); color: var(--text); }
-
-        .modal-body {
-            padding: 18px 22px;
-            display: flex; flex-direction: column; gap: 14px;
-        }
-
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .form-label {
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.55px; color: var(--text-muted);
-        }
-        .form-label .req { color: var(--alta); }
-
+        .modal-close-btn:hover { background:var(--border); color:var(--text); }
+        .modal-body { padding:17px 21px; display:flex; flex-direction:column; gap:13px; }
+        .form-group { display:flex; flex-direction:column; gap:5px; }
+        .form-row   { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+        .form-label { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); }
+        .form-label .req { color:var(--alta); }
         input[type="text"], textarea, select {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 7px; padding: 9px 11px;
-            color: var(--text); font-size: 13.5px; font-family: inherit;
-            transition: border-color .15s, box-shadow .15s;
-            width: 100%;
+            background:var(--surface2); border:1px solid var(--border); border-radius:7px;
+            padding:8px 10px; color:var(--text); font-size:13.5px; font-family:inherit;
+            transition:border-color .15s,box-shadow .15s; width:100%;
         }
         input[type="text"]:focus, textarea:focus, select:focus {
-            outline: none; border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.14);
+            outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,.13);
         }
-        textarea { resize: vertical; min-height: 70px; }
-        select option { background: #1a1a28; }
-
-        .priority-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+        textarea { resize:vertical; min-height:68px; }
+        select option { background:#1a1a28; }
+        .priority-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
         .pri-opt {
-            border: 1.5px solid var(--border);
-            border-radius: 8px; padding: 8px 6px;
-            text-align: center; cursor: pointer;
-            font-size: 11.5px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.3px; transition: all .14s;
-            color: var(--text-muted); user-select: none;
+            border:1.5px solid var(--border); border-radius:7px; padding:7px 5px;
+            text-align:center; cursor:pointer; font-size:11px; font-weight:700;
+            text-transform:uppercase; letter-spacing:.3px; transition:all .13px;
+            color:var(--text-muted); user-select:none;
         }
-        .pri-opt[data-v="ALTA"]:hover,  .pri-opt[data-v="ALTA"].sel  { border-color: var(--alta);  background: var(--alta-bg);  color: var(--alta);  }
-        .pri-opt[data-v="MEDIA"]:hover, .pri-opt[data-v="MEDIA"].sel { border-color: var(--media); background: var(--media-bg); color: var(--media); }
-        .pri-opt[data-v="BAJA"]:hover,  .pri-opt[data-v="BAJA"].sel  { border-color: var(--baja);  background: var(--baja-bg);  color: var(--baja);  }
-
-        .modal-foot {
-            padding: 14px 22px;
-            border-top: 1px solid var(--border);
-            display: flex; gap: 8px; justify-content: flex-end;
-        }
-
-        .btn { padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .13s; font-family: inherit; }
-        .btn:active { transform: scale(0.96); }
-        .btn-primary { background: var(--accent); color: #fff; }
-        .btn-primary:hover { background: #4f46e5; }
-        .btn-ghost { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
-        .btn-ghost:hover { background: var(--border); color: var(--text); }
+        .pri-opt[data-v="ALTA"]:hover,  .pri-opt[data-v="ALTA"].sel  { border-color:var(--alta);  background:var(--alta-bg);  color:var(--alta);  }
+        .pri-opt[data-v="MEDIA"]:hover, .pri-opt[data-v="MEDIA"].sel { border-color:var(--media); background:var(--media-bg); color:var(--media); }
+        .pri-opt[data-v="BAJA"]:hover,  .pri-opt[data-v="BAJA"].sel  { border-color:var(--baja);  background:var(--baja-bg);  color:var(--baja);  }
+        .modal-foot { padding:13px 21px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+        .btn { padding:8px 17px; border-radius:7px; font-size:12.5px; font-weight:600; cursor:pointer; border:none; transition:all .13s; font-family:inherit; }
+        .btn:active { transform:scale(0.96); }
+        .btn-primary { background:var(--accent); color:#fff; }
+        .btn-primary:hover { background:#4f46e5; }
+        .btn-ghost { background:var(--surface2); color:var(--text-muted); border:1px solid var(--border); }
+        .btn-ghost:hover { background:var(--border); color:var(--text); }
 
         /* ── Scrollbar ──────────────────────────────────────────────────── */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #333348; }
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:var(--bg); }
+        ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
     </style>
 </head>
 <body>
 
 <!-- ── HEADER ──────────────────────────────────────────────────────────────── -->
-<div class="header">
+<div class="header" id="header">
     <div class="logo">
         <div class="logo-icon">🤖</div>
         <div>
             <div class="logo-name">Tareas <span>Claude</span></div>
-            <div class="logo-sub">HyperTrader — Continuidad entre sesiones</div>
+            <div class="logo-sub">HyperTrader · Continuidad entre sesiones</div>
         </div>
     </div>
 
     <div class="header-stats">
-        <div class="stat">
-            <div class="stat-num active" id="cnt-active">0</div>
-            <div class="stat-label">Activas</div>
-        </div>
-        <div class="stat">
-            <div class="stat-num done" id="cnt-done">0</div>
-            <div class="stat-label">Completadas</div>
+        <div class="stat"><div class="stat-num active" id="cnt-active">0</div><div class="stat-label">Activas</div></div>
+        <div class="stat"><div class="stat-num done"   id="cnt-done">0</div><div class="stat-label">Listas</div></div>
+    </div>
+
+    <!-- Sync pill -->
+    <div class="sync-wrap" id="sync-wrap">
+        <button class="sync-pill" id="sync-pill" onclick="toggleSyncPanel()">
+            <span class="sync-dot" id="sync-dot"></span>
+            <span id="sync-label">Conectar sync</span>
+        </button>
+        <div class="sync-panel" id="sync-panel">
+            <!-- filled by JS -->
         </div>
     </div>
 
     <div class="header-actions">
-        <button class="btn-header export" onclick="exportarTareas()" title="Descargar tareas como JSON">
-            ↑ Exportar
-        </button>
-        <button class="btn-header import" onclick="document.getElementById('file-import').click()" title="Cargar tareas desde JSON">
-            ↓ Importar
-        </button>
+        <button class="btn-header" onclick="exportarTareas()">↑ Exportar</button>
+        <button class="btn-header" onclick="document.getElementById('file-import').click()">↓ Importar</button>
         <input type="file" id="file-import" accept=".json" style="display:none" onchange="importarTareas(event)">
     </div>
 </div>
@@ -579,31 +486,27 @@
 <!-- ── MAIN ────────────────────────────────────────────────────────────────── -->
 <div class="container">
 
-    <!-- Claude prompt bar -->
     <div class="context-bar">
         <div class="context-bar-icon">💬</div>
         <div class="context-bar-text">
-            Para retomar con Claude abre el proyecto y escribe:<br>
+            Para retomar con Claude abre el proyecto y escribe<br>
             <strong>"Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos"</strong>
         </div>
         <button class="btn-copy-prompt" onclick="copiarPrompt()">Copiar</button>
     </div>
 
-    <!-- Add task bar -->
     <div class="add-bar" onclick="openModal()">
         <div class="add-bar-icon">+</div>
         <span class="add-bar-text">Agregar nueva tarea para Claude...</span>
         <span class="add-bar-shortcut">⌘N</span>
     </div>
 
-    <!-- Active tasks -->
     <div class="section-header">
         <span class="section-title">Tareas Activas</span>
         <span class="section-badge" id="active-badge">0</span>
     </div>
     <div class="tasks-list" id="active-list"></div>
 
-    <!-- Completed tasks -->
     <div class="completed-section">
         <div class="section-header">
             <span class="section-title" style="color:var(--success)">Completadas</span>
@@ -615,34 +518,9 @@
 
 </div>
 
-<!-- ── TOAST ───────────────────────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
-<!-- ── IMPORT CONFIRM MODAL ────────────────────────────────────────────────── -->
-<div class="import-modal-overlay" id="import-overlay" onclick="handleImportOverlay(event)">
-    <div class="import-modal">
-        <div class="import-modal-head">
-            <div class="import-modal-icon">📥</div>
-            <div>
-                <div class="import-modal-title">Importar tareas</div>
-                <div class="import-modal-sub" id="import-summary">—</div>
-            </div>
-        </div>
-        <div class="import-modal-body">
-            <div class="import-info">
-                <strong>Reemplazar:</strong> borra todo lo actual e importa solo el archivo.<br><br>
-                <strong>Combinar:</strong> agrega las tareas nuevas sin borrar las existentes (evita duplicados por ID).
-            </div>
-        </div>
-        <div class="import-modal-foot">
-            <button class="btn-import-cancel" onclick="cancelImport()">Cancelar</button>
-            <button class="btn-import-replace" onclick="confirmarImport('replace')">Reemplazar</button>
-            <button class="btn-import-merge"   onclick="confirmarImport('merge')">Combinar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ── NEW TASK MODAL ──────────────────────────────────────────────────────── -->
+<!-- ── TASK MODAL ─────────────────────────────────────────────────────────── -->
 <div class="overlay" id="overlay" onclick="handleOverlay(event)">
     <div class="modal">
         <div class="modal-head">
@@ -650,12 +528,10 @@
             <button class="modal-close-btn" onclick="closeModal()">✕</button>
         </div>
         <div class="modal-body">
-
             <div class="form-group">
                 <label class="form-label">Título <span class="req">*</span></label>
                 <input type="text" id="f-titulo" placeholder="Ej: Migración completa a Bybit" />
             </div>
-
             <div class="form-group">
                 <label class="form-label">Prioridad</label>
                 <div class="priority-grid">
@@ -664,7 +540,6 @@
                     <div class="pri-opt"     data-v="BAJA"  onclick="selPri(this)">🔵 Baja</div>
                 </div>
             </div>
-
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Proyecto / Carpeta</label>
@@ -679,112 +554,109 @@
                     </select>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Qué debe hacer Claude <span class="req">*</span></label>
-                <textarea id="f-quehace" rows="3" placeholder="Describe claramente la tarea — Claude leerá esto al retomar..."></textarea>
+                <textarea id="f-quehace" rows="3" placeholder="Describe claramente la tarea…"></textarea>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Contexto (opcional)</label>
-                <textarea id="f-contexto" rows="2" placeholder="Por qué es necesario, qué pasó antes, qué se intentó..."></textarea>
+                <textarea id="f-contexto" rows="2" placeholder="Por qué es necesario, qué se intentó antes…"></textarea>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Archivos clave (opcional)</label>
                 <textarea id="f-archivos" rows="2" placeholder="src/ordenes.py&#10;config/config.yaml"></textarea>
             </div>
-
         </div>
         <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-            <button class="btn btn-primary" onclick="addTask()">Agregar tarea</button>
+            <button class="btn btn-ghost"    onclick="closeModal()">Cancelar</button>
+            <button class="btn btn-primary"  onclick="addTask()">Agregar tarea</button>
         </div>
     </div>
 </div>
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
-// SEED DATA
+// SEED DATA — estado inicial para visitantes nuevos
 // ══════════════════════════════════════════════════════════════════════════════
 
 const SEED_TASKS = [
-    {
-        id: 'seed-1', titulo: 'Migración completa a Bybit',
-        prioridad: 'ALTA',
-        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/bybit-trader/',
-        queHacer: 'Ejecutar la migración del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API (auth HMAC diferente, Buy/Sell en lugar de 1/2/3/4)\n2. Adaptar src/multi_bot.py — WS_FUTURES, obtener_balance_futures(), obtener_top_pares(), _conectar_ws(), _on_message()\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulación',
-        contexto: 'El proyecto HyperTrader 2 corre en MEXC. Se quiere migrar a Bybit manteniendo toda la lógica de pro_v2/, riesgo.py, indicadores.py, etc. Solo cambian las capas de comunicación. El plan fue aprobado y detallado, solo falta ejecutarlo.',
-        archivos: 'src/ordenes.py — reescritura completa para Bybit v5\nsrc/multi_bot.py — 5 cambios quirúrgicos\nconfig/config.yaml — reemplazar sección mexc: por bybit:',
-        estado: 'Pendiente', fecha: '2026-04-19',
-    },
-    {
-        id: 'seed-2', titulo: 'Posiciones huérfanas al reiniciar el bot',
-        prioridad: 'ALTA',
-        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
-        queHacer: 'Implementar reconciliación de posiciones al arrancar y detección de cierres externos cada 15 min.\n\n→ src/ordenes.py: añadir get_posiciones_abiertas()\n→ src/multi_bot.py: añadir _reconciliar_posiciones_arranque() y detección en _iniciar_sync_balance()',
-        contexto: 'Si el bot se reinicia con posiciones abiertas en MEXC, las pierde de memoria y no puede gestionar SL/TP. GestorRiesgo.__init__() siempre arranca con posiciones=[]. El endpoint existe en el exchange pero no está conectado al bot.',
-        archivos: 'src/ordenes.py\nsrc/multi_bot.py\nsrc/riesgo.py — ya tiene tiene_posicion() y _cerrar_posicion_externa()',
-        estado: 'Pendiente', fecha: '2026-04-19',
-    },
-    {
-        id: 'seed-3', titulo: 'Mejorar estrategia: demasiados loss / breakeven',
-        prioridad: 'MEDIA',
-        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
-        queHacer: 'Ajustar dos parámetros en config/config.yaml:\n\n  senales:\n    score_minimo: 80   # era 99\n  indicadores:\n    volumen_multiplicador: 2   # era 12',
-        contexto: 'score_minimo=99 filtra casi todas las señales buenas. volumen_multiplicador=12 exige volumen 12x el promedio — rara vez se cumple.',
-        archivos: 'config/config.yaml',
-        estado: 'Pendiente', fecha: '2026-04-19',
-    },
-    {
-        id: 'seed-4', titulo: 'Fix Hermes CLI con Google Gemini',
-        prioridad: 'MEDIA',
-        proyecto: '/Users/lamaquinadeldinero/.hermes/',
-        queHacer: 'Resolver por qué hermes no carga la API key de Gemini desde .env.\n\n1. Verificar si hermes carga .env automáticamente\n2. Probar: export GOOGLE_API_KEY=AIzaSy... antes de correr hermes\n3. O pasar la key como argumento CLI',
-        contexto: 'Se configuró gemini-2.5-flash. La key está en .env pero os.getenv("GOOGLE_API_KEY") devuelve vacío. Las llamadas fallan con API_KEY_INVALID. Key verificada válida vía curl.',
-        archivos: '/Users/lamaquinadeldinero/.hermes/.env — key en línea ~404\n/Users/lamaquinadeldinero/.hermes/config.yaml\nrun_agent.py línea 1065',
-        estado: 'Bloqueado', fecha: '2026-04-19',
-    },
-    {
-        id: 'seed-5', titulo: 'Escalar a 40 posiciones simultáneas',
-        prioridad: 'BAJA',
-        proyecto: '/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
-        queHacer: 'Solo cambiar en config/config.yaml (sin cambios de código):\n\n  riesgo:\n    max_posiciones_global: 40\n    max_operaciones_abiertas: 40\n    max_por_operacion: 0.010\n    circuit_breaker_pct: 0.10',
-        contexto: 'Actualmente el límite es 6 posiciones. Aplicar solo cuando el capital supere $200 USDT.',
-        archivos: 'config/config.yaml',
-        estado: 'Pendiente', fecha: '2026-04-19',
-    },
+    { id:'seed-1', titulo:'Migración completa a Bybit', prioridad:'ALTA',
+      proyecto:'/Users/lamaquinadeldinero/Desktop/Projectodinero/bybit-trader/',
+      queHacer:'Ejecutar la migración del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API\n2. Adaptar src/multi_bot.py — WS_FUTURES, balance, pares, _conectar_ws(), _on_message()\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulación',
+      contexto:'HyperTrader 2 corre en MEXC. Migrar a Bybit manteniendo pro_v2/, riesgo.py, indicadores.py. Solo cambian capas de comunicación. Plan aprobado, falta ejecutarlo.',
+      archivos:'src/ordenes.py — reescritura completa para Bybit v5\nsrc/multi_bot.py — 5 cambios quirúrgicos\nconfig/config.yaml — reemplazar sección mexc: por bybit:',
+      estado:'Pendiente', fecha:'2026-04-19' },
+    { id:'seed-2', titulo:'Posiciones huérfanas al reiniciar el bot', prioridad:'ALTA',
+      proyecto:'/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+      queHacer:'Implementar reconciliación al arrancar + detección de cierres externos cada 15 min.\n→ src/ordenes.py: añadir get_posiciones_abiertas()\n→ src/multi_bot.py: añadir _reconciliar_posiciones_arranque() y detección en _iniciar_sync_balance()',
+      contexto:'Al reiniciar con posiciones abiertas, el bot las pierde y no puede gestionar SL/TP. GestorRiesgo.__init__() siempre arranca con posiciones=[].',
+      archivos:'src/ordenes.py\nsrc/multi_bot.py\nsrc/riesgo.py — ya tiene tiene_posicion() y _cerrar_posicion_externa()',
+      estado:'Pendiente', fecha:'2026-04-19' },
+    { id:'seed-3', titulo:'Mejorar estrategia: demasiados loss / breakeven', prioridad:'MEDIA',
+      proyecto:'/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+      queHacer:'Cambiar en config/config.yaml:\n  senales:\n    score_minimo: 80   # era 99\n  indicadores:\n    volumen_multiplicador: 2   # era 12',
+      contexto:'score_minimo=99 filtra casi todas las señales buenas. volumen_multiplicador=12 rara vez se cumple. El bot opera muy poco y las entradas son subóptimas.',
+      archivos:'config/config.yaml', estado:'Pendiente', fecha:'2026-04-19' },
+    { id:'seed-4', titulo:'Fix Hermes CLI con Google Gemini', prioridad:'MEDIA',
+      proyecto:'/Users/lamaquinadeldinero/.hermes/',
+      queHacer:'Resolver por qué hermes no carga GOOGLE_API_KEY desde .env.\n1. Verificar si hermes carga .env automáticamente\n2. Probar: export GOOGLE_API_KEY=... antes de correr hermes\n3. O pasar la key como argumento CLI',
+      contexto:'gemini-2.5-flash configurado. Key en .env pero os.getenv devuelve vacío. API_KEY_INVALID al llamar. Key verificada válida vía curl.',
+      archivos:'/Users/lamaquinadeldinero/.hermes/.env\n/Users/lamaquinadeldinero/.hermes/config.yaml\nrun_agent.py línea 1065',
+      estado:'Bloqueado', fecha:'2026-04-19' },
+    { id:'seed-5', titulo:'Escalar a 40 posiciones simultáneas', prioridad:'BAJA',
+      proyecto:'/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/',
+      queHacer:'Solo cambiar config/config.yaml (sin código):\n  riesgo:\n    max_posiciones_global: 40\n    max_operaciones_abiertas: 40\n    max_por_operacion: 0.010\n    circuit_breaker_pct: 0.10',
+      contexto:'Límite actual es 6. Aplicar solo cuando capital supere $200 USDT.',
+      archivos:'config/config.yaml', estado:'Pendiente', fecha:'2026-04-19' },
 ];
 
 const SEED_DONE = [
-    { id: 'done-1',  titulo: 'Dashboard muestra capital real (capital_total)',                fecha: '2026-04-19' },
-    { id: 'done-2',  titulo: 'Dashboard filtra trades reales — últimos 30 días',              fecha: '2026-04-19' },
-    { id: 'done-3',  titulo: 'PnL del dashboard muestra solo trades cerrados HOY',            fecha: '2026-04-19' },
-    { id: 'done-4',  titulo: 'Limpieza de 60 archivos muertos (56,320 líneas eliminadas)',    fecha: '2026-04-19' },
-    { id: 'done-5',  titulo: 'Leverage correcto en PnL — actualizar_pnl × leverage',          fecha: '2026-04-18' },
-    { id: 'done-6',  titulo: 'GestorRiesgo recibe parámetro leverage',                        fecha: '2026-04-18' },
-    { id: 'done-7',  titulo: 'tiene_posicion() y tiene_posicion_opuesta() en riesgo.py',      fecha: '2026-04-18' },
-    { id: 'done-8',  titulo: '_cerrar_posicion_externa() en riesgo.py',                       fecha: '2026-04-18' },
-    { id: 'done-9',  titulo: 'Circuit breaker basado en equity real',                         fecha: '2026-04-17' },
-    { id: 'done-10', titulo: 'Stop loss fijo 3% independiente de ATR',                        fecha: '2026-04-17' },
+    { id:'done-1',  titulo:'Dashboard muestra capital real (capital_total)',                fecha:'2026-04-19' },
+    { id:'done-2',  titulo:'Dashboard filtra trades reales — últimos 30 días',              fecha:'2026-04-19' },
+    { id:'done-3',  titulo:'PnL del dashboard muestra solo trades cerrados HOY',            fecha:'2026-04-19' },
+    { id:'done-4',  titulo:'Limpieza de 60 archivos muertos (56,320 líneas eliminadas)',    fecha:'2026-04-19' },
+    { id:'done-5',  titulo:'Leverage correcto en PnL — actualizar_pnl × leverage',          fecha:'2026-04-18' },
+    { id:'done-6',  titulo:'GestorRiesgo recibe parámetro leverage',                        fecha:'2026-04-18' },
+    { id:'done-7',  titulo:'tiene_posicion() y tiene_posicion_opuesta() en riesgo.py',      fecha:'2026-04-18' },
+    { id:'done-8',  titulo:'_cerrar_posicion_externa() en riesgo.py',                       fecha:'2026-04-18' },
+    { id:'done-9',  titulo:'Circuit breaker basado en equity real',                         fecha:'2026-04-17' },
+    { id:'done-10', titulo:'Stop loss fijo 3% independiente de ATR',                        fecha:'2026-04-17' },
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
-// STATE & PERSISTENCE
+// GITHUB SYNC CONFIG
+// ══════════════════════════════════════════════════════════════════════════════
+
+const GH_OWNER = 'Cornelio-LuisMiguel';
+const GH_REPO  = 'tareas-claude';
+const GH_FILE  = 'tasks.json';
+const GH_API   = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+const GH_RAW   = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_FILE}`;
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATE
 // ══════════════════════════════════════════════════════════════════════════════
 
 const STORAGE_KEY = 'claude-tasks-v3';
+const TOKEN_KEY   = 'claude-gh-token';
+const SHA_KEY     = 'claude-gh-sha';
 
-function load() {
+function loadLocal() {
     try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch(e) {}
     return { tasks: SEED_TASKS, done: SEED_DONE };
 }
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function saveLocal() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
 
-let state = load();
+let state        = loadLocal();
+let ghToken      = localStorage.getItem(TOKEN_KEY) || '';
+let ghSha        = localStorage.getItem(SHA_KEY)   || null;
+let syncStatus   = 'idle';  // idle | loading | saving | synced | error | notoken
+let syncTimer    = null;
 let completedOpen = true;
-let curPri = 'ALTA';
-let pendingImport = null;   // holds parsed JSON while user decides replace vs merge
+let curPri        = 'ALTA';
+let syncPanelOpen = false;
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HELPERS
@@ -794,15 +666,16 @@ function esc(s) {
     if (!s) return '';
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function uid() { return 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2,7); }
+function uid()  { return 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2,7); }
+function today(){ return new Date().toISOString().slice(0,10); }
 
 function priBadge(p) {
     const m = { ALTA:'badge-alta', MEDIA:'badge-media', BAJA:'badge-baja', BLOQUEADO:'badge-bloqueado' };
     return `<span class="badge ${m[p]||'badge-pendiente'}">${p}</span>`;
 }
 function estadoBadge(e) {
-    if (e === 'En progreso') return `<span class="badge badge-progreso" style="font-size:10px">En progreso</span>`;
-    if (e === 'Bloqueado')   return `<span class="badge badge-bloqueado" style="font-size:10px">Bloqueado</span>`;
+    if (e === 'En progreso') return `<span class="badge badge-progreso" style="font-size:9.5px">En progreso</span>`;
+    if (e === 'Bloqueado')   return `<span class="badge badge-bloqueado" style="font-size:9.5px">Bloqueado</span>`;
     return '';
 }
 
@@ -811,12 +684,222 @@ function estadoBadge(e) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 let toastTimer = null;
-function toast(msg, type = 'success') {
+function toast(msg, type = 'ok') {
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.className = `toast ${type} show`;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GITHUB SYNC
+// ══════════════════════════════════════════════════════════════════════════════
+
+function setSyncStatus(s, detail) {
+    syncStatus = s;
+    const pill  = document.getElementById('sync-pill');
+    const label = document.getElementById('sync-label');
+    pill.className = 'sync-pill';
+
+    if (s === 'notoken') {
+        label.textContent = 'Conectar sync';
+    } else if (s === 'loading') {
+        pill.classList.add('syncing');
+        label.textContent = 'Cargando…';
+    } else if (s === 'saving') {
+        pill.classList.add('syncing');
+        label.textContent = 'Guardando…';
+    } else if (s === 'synced') {
+        pill.classList.add('synced');
+        label.textContent = 'Sincronizado';
+        localStorage.setItem('claude-sync-last', new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' }));
+    } else if (s === 'error') {
+        pill.classList.add('error');
+        label.textContent = detail || 'Error de sync';
+    }
+    renderSyncPanel();
+}
+
+async function fetchFromGitHub(silent = false) {
+    if (!ghToken) { setSyncStatus('notoken'); return; }
+    if (!silent) setSyncStatus('loading');
+    try {
+        const r = await fetch(GH_API, {
+            headers: {
+                'Authorization': `Bearer ${ghToken}`,
+                'Accept':        'application/vnd.github.v3+json',
+                'Cache-Control': 'no-cache',
+            }
+        });
+        if (r.status === 404) {
+            // File doesn't exist yet — create it
+            await pushToGitHub(true);
+            return;
+        }
+        if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+        const data    = await r.json();
+        ghSha         = data.sha;
+        localStorage.setItem(SHA_KEY, ghSha);
+        const remote  = JSON.parse(atob(data.content.replace(/\n/g,'')));
+        // Use remote if it has a lastModified newer than local
+        const localTs  = state.lastModified  || 0;
+        const remoteTs = remote.lastModified || 0;
+        if (remoteTs > localTs) {
+            state = remote;
+            saveLocal();
+            render();
+            if (!silent) toast('☁ Tareas actualizadas desde GitHub', 'ok');
+        }
+        setSyncStatus('synced');
+    } catch(e) {
+        setSyncStatus('error', 'Error al conectar');
+        if (!silent) toast('⚠ No se pudo conectar con GitHub', 'warn');
+    }
+}
+
+async function pushToGitHub(forceCreate = false) {
+    if (!ghToken) return;
+    setSyncStatus('saving');
+    try {
+        const payload = { ...state, lastModified: Date.now() };
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+        const body    = {
+            message: `sync: ${new Date().toISOString()}`,
+            content,
+        };
+        if (ghSha && !forceCreate) body.sha = ghSha;
+
+        const r = await fetch(GH_API, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${ghToken}`,
+                'Content-Type':  'application/json',
+                'Accept':        'application/vnd.github.v3+json',
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (r.status === 409) {
+            // SHA conflict — fetch first, then retry
+            await fetchFromGitHub(true);
+            await pushToGitHub();
+            return;
+        }
+        if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+
+        const data = await r.json();
+        ghSha      = data.content.sha;
+        localStorage.setItem(SHA_KEY, ghSha);
+        state.lastModified = payload.lastModified;
+        setSyncStatus('synced');
+    } catch(e) {
+        setSyncStatus('error', 'Error al guardar');
+    }
+}
+
+// Debounced auto-push after any change
+function schedulePush() {
+    clearTimeout(syncTimer);
+    if (ghToken) syncTimer = setTimeout(() => pushToGitHub(), 1400);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SYNC PANEL UI
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderSyncPanel() {
+    const panel = document.getElementById('sync-panel');
+    const last  = localStorage.getItem('claude-sync-last') || '';
+
+    if (!ghToken) {
+        panel.innerHTML = `
+            <div class="sync-panel-head">Sincronización automática</div>
+            <div class="sync-panel-body">
+                <div class="sync-info">
+                    Conecta tu <strong>GitHub Token</strong> para guardar los cambios automáticamente.
+                    Cualquier dispositivo con la misma URL verá siempre la versión más reciente.
+                </div>
+                <div class="sync-input-row">
+                    <input class="sync-input" type="password" id="token-input"
+                           placeholder="ghp_…" onkeydown="if(event.key==='Enter')activarSync()" />
+                    <button class="sync-btn-primary" onclick="activarSync()">Activar</button>
+                </div>
+            </div>`;
+    } else {
+        const statusIcon  = syncStatus === 'synced' ? '✓' : syncStatus === 'error' ? '⚠' : '⟳';
+        const statusColor = syncStatus === 'synced' ? 'var(--success)' : syncStatus === 'error' ? 'var(--media)' : 'var(--accent)';
+        const statusText  = syncStatus === 'synced' ? 'Conectado · GitHub'
+                          : syncStatus === 'error'  ? 'Error de conexión'
+                          : 'Sincronizando…';
+        panel.innerHTML = `
+            <div class="sync-panel-head">Sincronización activa</div>
+            <div class="sync-panel-body">
+                <div class="sync-status-row">
+                    <div class="sync-status-icon" style="color:${statusColor}">${statusIcon}</div>
+                    <div class="sync-status-text">
+                        <strong>${statusText}</strong>
+                        ${GH_OWNER}/${GH_REPO}${last ? ` · ${last}` : ''}
+                    </div>
+                    <button class="sync-btn-danger" onclick="desconectarSync()">Desconectar</button>
+                </div>
+                ${syncStatus === 'error' ? `<button class="sync-btn-primary" style="width:100%" onclick="fetchFromGitHub()">Reintentar</button>` : ''}
+            </div>`;
+    }
+}
+
+function toggleSyncPanel() {
+    syncPanelOpen = !syncPanelOpen;
+    document.getElementById('sync-panel').classList.toggle('open', syncPanelOpen);
+    if (syncPanelOpen) {
+        renderSyncPanel();
+        if (!ghToken) setTimeout(() => document.getElementById('token-input')?.focus(), 80);
+    }
+}
+
+function closeSyncPanel() {
+    syncPanelOpen = false;
+    document.getElementById('sync-panel').classList.remove('open');
+}
+
+async function activarSync() {
+    const input = document.getElementById('token-input');
+    const token = input ? input.value.trim() : '';
+    if (!token) { input.style.borderColor='var(--alta)'; return; }
+    ghToken = token;
+    localStorage.setItem(TOKEN_KEY, token);
+    closeSyncPanel();
+    await fetchFromGitHub();
+}
+
+function desconectarSync() {
+    ghToken = '';
+    ghSha   = null;
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(SHA_KEY);
+    setSyncStatus('notoken');
+    closeSyncPanel();
+    toast('Sync desconectado', 'warn');
+}
+
+// Close sync panel when clicking outside
+document.addEventListener('click', e => {
+    const wrap = document.getElementById('sync-wrap');
+    if (wrap && !wrap.contains(e.target)) closeSyncPanel();
+});
+
+// Re-sync when tab becomes visible (user switches back from another device)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && ghToken) fetchFromGitHub(true);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SAVE (local + debounced remote)
+// ══════════════════════════════════════════════════════════════════════════════
+
+function save() {
+    saveLocal();
+    schedulePush();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -833,8 +916,8 @@ function renderTask(t) {
                 <span class="task-title">${esc(t.titulo)}</span>
                 <div class="task-actions">
                     ${estadoBadge(t.estado)}
-                    <button class="btn-icon btn-complete" title="Marcar como completada" onclick="completeTask('${t.id}')">✓</button>
-                    <button class="btn-icon btn-delete"   title="Eliminar tarea"         onclick="deleteTask('${t.id}')">✕</button>
+                    <button class="btn-icon btn-complete" title="Completar" onclick="completeTask('${t.id}')">✓</button>
+                    <button class="btn-icon btn-delete"   title="Eliminar"  onclick="deleteTask('${t.id}')">✕</button>
                 </div>
             </div>
             ${t.proyecto ? `<div class="task-project">${esc(t.proyecto)}</div>` : ''}
@@ -861,8 +944,8 @@ function renderDone(d) {
         <div class="check-circle">✓</div>
         <span class="completed-title">${esc(d.titulo)}</span>
         <span class="completed-date">${d.fecha||''}</span>
-        <button class="btn-icon btn-delete" style="width:24px;height:24px;font-size:11px;flex-shrink:0"
-                title="Eliminar" onclick="deleteDone('${d.id}')">✕</button>
+        <button class="btn-icon btn-delete" style="width:23px;height:23px;font-size:10px;flex-shrink:0"
+                onclick="deleteDone('${d.id}')">✕</button>
     </div>`;
 }
 
@@ -870,20 +953,15 @@ function render() {
     const al = document.getElementById('active-list');
     const dl = document.getElementById('done-list');
 
-    al.innerHTML = state.tasks.length
+    al.innerHTML = state.tasks && state.tasks.length
         ? state.tasks.map(renderTask).join('')
-        : `<div class="empty-state">
-               <div class="empty-state-emoji">🎯</div>
-               <div class="empty-state-text">No hay tareas activas — ¡todo bajo control!</div>
-           </div>`;
+        : `<div class="empty-state"><div class="empty-state-emoji">🎯</div><div class="empty-state-text">No hay tareas activas</div></div>`;
 
-    dl.innerHTML = state.done.length
+    dl.innerHTML = state.done && state.done.length
         ? state.done.map(renderDone).join('')
-        : `<div class="empty-state" style="padding:18px">
-               <div class="empty-state-text">Nada completado aún</div>
-           </div>`;
+        : `<div class="empty-state" style="padding:16px"><div class="empty-state-text">Nada completado aún</div></div>`;
 
-    const a = state.tasks.length, d = state.done.length;
+    const a = (state.tasks||[]).length, d = (state.done||[]).length;
     document.getElementById('cnt-active').textContent   = a;
     document.getElementById('cnt-done').textContent     = d;
     document.getElementById('active-badge').textContent = a;
@@ -891,7 +969,7 @@ function render() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// ACTIONS
+// TASK ACTIONS
 // ══════════════════════════════════════════════════════════════════════════════
 
 function completeTask(id) {
@@ -902,10 +980,11 @@ function completeTask(id) {
     if (card) card.classList.add('removing');
     setTimeout(() => {
         state.tasks.splice(idx, 1);
-        state.done.unshift({ id: uid(), titulo: t.titulo, fecha: new Date().toISOString().slice(0,10) });
+        if (!state.done) state.done = [];
+        state.done.unshift({ id: uid(), titulo: t.titulo, fecha: today() });
         save(); render();
         toast('✓ Tarea completada');
-    }, 250);
+    }, 230);
 }
 
 function deleteTask(id) {
@@ -914,20 +993,20 @@ function deleteTask(id) {
     setTimeout(() => {
         state.tasks = state.tasks.filter(t => t.id !== id);
         save(); render();
-        toast('Tarea eliminada', 'error');
-    }, 250);
+        toast('Tarea eliminada', 'warn');
+    }, 230);
 }
 
 function deleteDone(id) {
     const card = document.querySelector(`.completed-card[data-id="${id}"]`);
-    if (card) { card.style.opacity='0'; card.style.transform='translateX(12px)'; card.style.transition='all .2s'; }
+    if (card) { card.style.opacity='0'; card.style.transform='translateX(10px)'; card.style.transition='all .18s'; }
     setTimeout(() => {
         state.done = state.done.filter(d => d.id !== id);
         save(); render();
-    }, 200);
+    }, 180);
 }
 
-function toggleDet(id, btn) {
+function toggleDet(id) {
     const det  = document.getElementById(`det-${id}`);
     const chev = document.getElementById(`chev-${id}`);
     const lbl  = document.getElementById(`explbl-${id}`);
@@ -943,75 +1022,44 @@ function toggleCompleted() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// EXPORT / IMPORT
+// EXPORT / IMPORT (manual fallback)
 // ══════════════════════════════════════════════════════════════════════════════
 
 function exportarTareas() {
-    const payload = {
-        version: 1,
-        app: 'Tareas Claude — HyperTrader',
-        exportado: new Date().toISOString(),
-        tasks: state.tasks,
-        done:  state.done,
-    };
-    const json = JSON.stringify(payload, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
+    const payload = { version:1, app:'Tareas Claude', exportado:new Date().toISOString(), ...state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href     = url;
-    a.download = `tareas-claude-${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `tareas-claude-${today()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast(`↑ Exportadas ${state.tasks.length} tareas activas y ${state.done.length} completadas`);
+    toast(`↑ Exportadas ${(state.tasks||[]).length} activas y ${(state.done||[]).length} completadas`);
 }
 
 function importarTareas(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = function(ev) {
+    reader.onload = ev => {
         try {
             const data = JSON.parse(ev.target.result);
-            if (!Array.isArray(data.tasks) || !Array.isArray(data.done))
-                throw new Error('El archivo no tiene el formato correcto.');
-            pendingImport = data;
-            document.getElementById('import-summary').textContent =
-                `${data.tasks.length} activas · ${data.done.length} completadas · exportado ${(data.exportado||'').slice(0,10)}`;
-            document.getElementById('import-overlay').classList.add('open');
-        } catch(err) {
-            toast('Error al leer el archivo: ' + err.message, 'error');
-        }
+            if (!Array.isArray(data.tasks) || !Array.isArray(data.done)) throw new Error('Formato inválido');
+            const mode = confirm(`Importar ${data.tasks.length} tareas activas y ${data.done.length} completadas.\n\nOK = Reemplazar todo\nCancelar = Combinar`);
+            if (mode) {
+                state.tasks = data.tasks;
+                state.done  = data.done;
+            } else {
+                const et = new Set(state.tasks.map(t=>t.id)), ed = new Set(state.done.map(d=>d.id));
+                data.tasks.forEach(t => { if (!et.has(t.id)) state.tasks.push(t); });
+                data.done.forEach(d  => { if (!ed.has(d.id)) state.done.push(d); });
+            }
+            save(); render();
+            toast('↓ Tareas importadas correctamente');
+        } catch(err) { toast('Error al importar: ' + err.message, 'err'); }
         e.target.value = '';
     };
     reader.readAsText(file);
-}
-
-function confirmarImport(mode) {
-    if (!pendingImport) return;
-    if (mode === 'replace') {
-        state.tasks = pendingImport.tasks;
-        state.done  = pendingImport.done;
-        toast(`↓ Reemplazado — ${state.tasks.length} tareas importadas`);
-    } else {
-        const existT = new Set(state.tasks.map(t => t.id));
-        const existD = new Set(state.done.map(d => d.id));
-        let added = 0;
-        pendingImport.tasks.forEach(t => { if (!existT.has(t.id)) { state.tasks.push(t); added++; } });
-        pendingImport.done.forEach(d  => { if (!existD.has(d.id)) { state.done.push(d); } });
-        toast(`↓ Combinado — ${added} tarea${added !== 1 ? 's' : ''} nueva${added !== 1 ? 's' : ''} agregada${added !== 1 ? 's' : ''}`);
-    }
-    pendingImport = null;
-    save(); render();
-    document.getElementById('import-overlay').classList.remove('open');
-}
-
-function cancelImport() {
-    pendingImport = null;
-    document.getElementById('import-overlay').classList.remove('open');
-}
-
-function handleImportOverlay(e) {
-    if (e.target === document.getElementById('import-overlay')) cancelImport();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1019,8 +1067,8 @@ function handleImportOverlay(e) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 function copiarPrompt() {
-    const texto = 'Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos';
-    navigator.clipboard.writeText(texto).then(() => toast('📋 Prompt copiado al portapapeles'));
+    navigator.clipboard.writeText('Lee TAREAS_CLAUDE.html en el Desktop y continúa donde quedamos')
+        .then(() => toast('📋 Prompt copiado'));
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1029,53 +1077,43 @@ function copiarPrompt() {
 
 function openModal() {
     document.getElementById('overlay').classList.add('open');
+    closeSyncPanel();
     setTimeout(() => document.getElementById('f-titulo').focus(), 80);
 }
-
 function closeModal() {
     document.getElementById('overlay').classList.remove('open');
     resetForm();
 }
-
-function handleOverlay(e) {
-    if (e.target === document.getElementById('overlay')) closeModal();
-}
+function handleOverlay(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
 
 function selPri(el) {
     document.querySelectorAll('.pri-opt').forEach(o => o.classList.remove('sel'));
-    el.classList.add('sel');
-    curPri = el.dataset.v;
+    el.classList.add('sel'); curPri = el.dataset.v;
 }
-
 function resetForm() {
-    ['f-titulo','f-proyecto','f-quehace','f-contexto','f-archivos'].forEach(id => {
-        document.getElementById(id).value = '';
-    });
+    ['f-titulo','f-proyecto','f-quehace','f-contexto','f-archivos'].forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('f-estado').value = 'Pendiente';
     curPri = 'ALTA';
     document.querySelectorAll('.pri-opt').forEach(o => o.classList.toggle('sel', o.dataset.v === 'ALTA'));
 }
-
 function addTask() {
-    const titulo   = document.getElementById('f-titulo').value.trim();
-    const queHacer = document.getElementById('f-quehace').value.trim();
+    const titulo = document.getElementById('f-titulo').value.trim();
     if (!titulo) {
         const el = document.getElementById('f-titulo');
-        el.style.borderColor = 'var(--alta)';
-        el.focus();
-        setTimeout(() => el.style.borderColor = '', 1800);
-        return;
+        el.style.borderColor = 'var(--alta)'; el.focus();
+        setTimeout(() => el.style.borderColor = '', 1800); return;
     }
+    if (!state.tasks) state.tasks = [];
     state.tasks.unshift({
         id:        uid(),
         titulo,
         prioridad: curPri,
         proyecto:  document.getElementById('f-proyecto').value.trim(),
-        queHacer:  queHacer || '(por definir)',
+        queHacer:  document.getElementById('f-quehace').value.trim() || '(por definir)',
         contexto:  document.getElementById('f-contexto').value.trim(),
         archivos:  document.getElementById('f-archivos').value.trim(),
         estado:    document.getElementById('f-estado').value,
-        fecha:     new Date().toISOString().slice(0,10),
+        fecha:     today(),
     });
     save(); closeModal(); render();
     toast('✓ Tarea agregada');
@@ -1087,17 +1125,25 @@ function addTask() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 document.addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); openModal(); return; }
-    if ((e.metaKey || e.ctrlKey) && e.key === 'e') { e.preventDefault(); exportarTareas(); return; }
-    if (e.key === 'Escape') { closeModal(); cancelImport(); }
-    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT'
-        && document.getElementById('overlay').classList.contains('open')) { addTask(); }
+    if ((e.metaKey||e.ctrlKey) && e.key==='n') { e.preventDefault(); openModal(); return; }
+    if ((e.metaKey||e.ctrlKey) && e.key==='e') { e.preventDefault(); exportarTareas(); return; }
+    if (e.key==='Escape') { closeModal(); closeSyncPanel(); }
+    if (e.key==='Enter' && e.target.tagName!=='TEXTAREA' && e.target.tagName!=='SELECT'
+        && document.getElementById('overlay').classList.contains('open')) addTask();
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
+
 render();
+// Initialize sync status
+if (ghToken) {
+    setSyncStatus('loading');
+    fetchFromGitHub();   // pull latest on every page load
+} else {
+    setSyncStatus('notoken');
+}
 </script>
 </body>
 </html>
