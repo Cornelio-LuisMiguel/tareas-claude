@@ -1,33 +1,22 @@
 {
   "tasks": [
     {
-      "id": "task-1776723333699-jt8ga",
-      "titulo": "prueba",
-      "prioridad": "ALTA",
-      "proyecto": "no",
-      "queHacer": "no",
-      "contexto": "no",
-      "archivos": "",
-      "estado": "Pendiente",
-      "fecha": "2026-04-20"
-    },
-    {
       "id": "seed-1",
-      "titulo": "MigraciÃ³n completa a Bybit",
+      "titulo": "MigraciÃÂ³n completa a Bybit",
       "prioridad": "ALTA",
       "proyecto": "/Users/lamaquinadeldinero/Desktop/Projectodinero/bybit-trader/",
-      "queHacer": "Ejecutar la migraciÃ³n del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API\n2. Adaptar src/multi_bot.py\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulaciÃ³n",
-      "contexto": "HyperTrader 2 corre en MEXC. Migrar a Bybit manteniendo pro_v2/, riesgo.py, indicadores.py. Solo cambian capas de comunicaciÃ³n.",
+      "queHacer": "Ejecutar la migraciÃÂ³n del bot de MEXC a Bybit v5. El plan ya fue aprobado.\n\n1. Reescribir src/ordenes.py para Bybit v5 API\n2. Adaptar src/multi_bot.py\n3. Crear config/config.yaml con credenciales Bybit\n4. Probar en simulaciÃÂ³n",
+      "contexto": "HyperTrader 2 corre en MEXC. Migrar a Bybit manteniendo pro_v2/, riesgo.py, indicadores.py. Solo cambian capas de comunicaciÃÂ³n.",
       "archivos": "src/ordenes.py\nsrc/multi_bot.py\nconfig/config.yaml",
       "estado": "Pendiente",
       "fecha": "2026-04-19"
     },
     {
       "id": "seed-2",
-      "titulo": "Posiciones huÃ©rfanas al reiniciar el bot",
+      "titulo": "Posiciones huÃÂ©rfanas al reiniciar el bot",
       "prioridad": "ALTA",
       "proyecto": "/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/",
-      "queHacer": "Implementar reconciliaciÃ³n al arrancar + detecciÃ³n de cierres externos cada 15 min.",
+      "queHacer": "Implementar reconciliaciÃÂ³n al arrancar + detecciÃÂ³n de cierres externos cada 15 min.",
       "contexto": "Al reiniciar con posiciones abiertas, el bot las pierde y no puede gestionar SL/TP.",
       "archivos": "src/ordenes.py\nsrc/multi_bot.py\nsrc/riesgo.py",
       "estado": "Pendiente",
@@ -39,7 +28,7 @@
       "prioridad": "MEDIA",
       "proyecto": "/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/",
       "queHacer": "Cambiar config/config.yaml:\n  senales:\n    score_minimo: 80\n  indicadores:\n    volumen_multiplicador: 2",
-      "contexto": "score_minimo=99 filtra casi todas las seÃ±ales. volumen_multiplicador=12 rara vez se cumple.",
+      "contexto": "score_minimo=99 filtra casi todas las seÃÂ±ales. volumen_multiplicador=12 rara vez se cumple.",
       "archivos": "config/config.yaml",
       "estado": "Pendiente",
       "fecha": "2026-04-19"
@@ -49,15 +38,15 @@
       "titulo": "Fix Hermes CLI con Google Gemini",
       "prioridad": "MEDIA",
       "proyecto": "/Users/lamaquinadeldinero/.hermes/",
-      "queHacer": "Resolver por quÃ© hermes no carga GOOGLE_API_KEY desde .env.",
-      "contexto": "gemini-2.5-flash configurado. Key vÃ¡lida vÃ­a curl pero proceso no la encuentra.",
-      "archivos": "/Users/lamaquinadeldinero/.hermes/.env\nrun_agent.py lÃ­nea 1065",
+      "queHacer": "Resolver por quÃÂ© hermes no carga GOOGLE_API_KEY desde .env.",
+      "contexto": "gemini-2.5-flash configurado. Key vÃÂ¡lida vÃÂ­a curl pero proceso no la encuentra.",
+      "archivos": "/Users/lamaquinadeldinero/.hermes/.env\nrun_agent.py lÃÂ­nea 1065",
       "estado": "Bloqueado",
       "fecha": "2026-04-19"
     },
     {
       "id": "seed-5",
-      "titulo": "Escalar a 40 posiciones simultÃ¡neas",
+      "titulo": "Escalar a 40 posiciones simultÃÂ¡neas",
       "prioridad": "BAJA",
       "proyecto": "/Users/lamaquinadeldinero/Desktop/Projectodinero/mexc-trader 2/",
       "queHacer": "Solo cambiar config/config.yaml:\n  riesgo:\n    max_posiciones_global: 40\n    max_operaciones_abiertas: 40",
@@ -75,7 +64,7 @@
     },
     {
       "id": "done-2",
-      "titulo": "Dashboard filtra trades reales â Ãºltimos 30 dÃ­as",
+      "titulo": "Dashboard filtra trades reales Ã¢ÂÂ ÃÂºltimos 30 dÃÂ­as",
       "fecha": "2026-04-19"
     },
     {
@@ -85,17 +74,17 @@
     },
     {
       "id": "done-4",
-      "titulo": "Limpieza de 60 archivos muertos (56,320 lÃ­neas eliminadas)",
+      "titulo": "Limpieza de 60 archivos muertos (56,320 lÃÂ­neas eliminadas)",
       "fecha": "2026-04-19"
     },
     {
       "id": "done-5",
-      "titulo": "Leverage correcto en PnL â actualizar_pnl Ã leverage",
+      "titulo": "Leverage correcto en PnL Ã¢ÂÂ actualizar_pnl ÃÂ leverage",
       "fecha": "2026-04-18"
     },
     {
       "id": "done-6",
-      "titulo": "GestorRiesgo recibe parÃ¡metro leverage",
+      "titulo": "GestorRiesgo recibe parÃÂ¡metro leverage",
       "fecha": "2026-04-18"
     },
     {
@@ -119,5 +108,5 @@
       "fecha": "2026-04-17"
     }
   ],
-  "lastModified": 1776723335253
+  "lastModified": 1776723346802
 }
