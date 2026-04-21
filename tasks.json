@@ -1,6 +1,17 @@
 {
   "tasks": [
     {
+      "id": "task-1776733346592-zylqf",
+      "titulo": "Probando probando",
+      "prioridad": "ALTA",
+      "proyecto": "Esto es una prueba",
+      "queHacer": "esto es otra prueba 1.2.3",
+      "contexto": "no hay contexto, solo pruebas.",
+      "archivos": "",
+      "estado": "Pendiente",
+      "fecha": "2026-04-21"
+    },
+    {
       "id": "seed-1",
       "titulo": "MigraciÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ³n completa a Bybit",
       "prioridad": "ALTA",
@@ -108,5 +119,5 @@
       "fecha": "2026-04-17"
     }
   ],
-  "lastModified": 1776725783195
+  "lastModified": 1776733348140
 }
