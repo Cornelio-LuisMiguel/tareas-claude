@@ -1,6 +1,17 @@
 {
   "tasks": [
     {
+      "id": "task-1776733483841-n4i94",
+      "titulo": "prueba 2 12.34.56",
+      "prioridad": "ALTA",
+      "proyecto": "esto es otra prueba",
+      "queHacer": "cariño dame amor",
+      "contexto": "te quiero con pasion",
+      "archivos": "",
+      "estado": "Pendiente",
+      "fecha": "2026-04-21"
+    },
+    {
       "id": "task-1776733346592-zylqf",
       "titulo": "Probando probando",
       "prioridad": "ALTA",
@@ -119,5 +130,5 @@
       "fecha": "2026-04-17"
     }
   ],
-  "lastModified": 1776733348140
+  "lastModified": 1776733485424
 }
